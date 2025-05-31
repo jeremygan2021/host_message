@@ -22,8 +22,10 @@ app = FastAPI()
 with open(os.path.join(os.path.dirname(__file__), "database", "ip_list.json"), "r") as f:
     ip_list = json.load(f)
 
-admin_ip = "172.18.0.1"
+admin_ip = ip_list["admin_ip"]
 ip_vs_name = ip_list["ip_vs_name"]
+
+print(f"管理员IP: {admin_ip}")
 
 
 
@@ -50,6 +52,7 @@ if not os.path.exists(CHAT_HISTORY_DIR):
 
 # 挂载静态文件目录
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/image", StaticFiles(directory="image"), name="image")
 
 # 用户管理
 @dataclass
