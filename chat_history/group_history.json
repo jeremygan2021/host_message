@@ -1,0 +1,32 @@
+[
+  {
+    "message": "你好",
+    "type": "text",
+    "ip": "8.8.8.9",
+    "timestamp": 1748625934121
+  },
+  {
+    "message": "你好呀",
+    "type": "text",
+    "ip": "127.0.0.1",
+    "timestamp": 1748625952255
+  },
+  {
+    "message": "风",
+    "type": "text",
+    "ip": "8.8.8.9",
+    "timestamp": 1748626037873
+  },
+  {
+    "message": "你好",
+    "type": "text",
+    "ip": "8.8.8.9",
+    "timestamp": 1748626362180
+  },
+  {
+    "message": "你好",
+    "type": "text",
+    "ip": "8.8.8.9",
+    "timestamp": 1748627073585
+  }
+]
