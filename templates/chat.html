@@ -115,7 +115,6 @@
             align-items: center;
             padding: 0 20px;
             position: relative;
-            box-shadow: 0 2px 4px var(--shadow-color);
         }
 
         .menu-toggle {
@@ -141,10 +140,6 @@
         .chat-title {
             font-size: 1.2em;
             font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 60%;
         }
 
         .connection-status {
@@ -2349,60 +2344,6 @@
                 transform: scale(0.98);
             }
         }
-
-        /* 移动端优化 */
-        @media screen and (max-width: 768px) {
-            :root {
-                --header-height: 50px;
-                --sidebar-width: 250px;
-            }
-
-            .chat-header {
-                padding: 0 12px;
-            }
-
-            .menu-toggle {
-                margin-right: 8px;
-                width: 32px;
-                height: 32px;
-                font-size: 1.2em;
-            }
-
-            .chat-title {
-                font-size: 1.1em;
-                max-width: 50%;
-            }
-
-            .connection-status {
-                gap: 6px;
-            }
-
-            .connection-status span {
-                display: none;
-            }
-
-            .status-indicator {
-                width: 6px;
-                height: 6px;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .chat-header {
-                padding: 0 8px;
-            }
-
-            .chat-title {
-                font-size: 1em;
-                max-width: 40%;
-            }
-
-            .menu-toggle {
-                margin-right: 6px;
-                width: 50px;
-                height: 50px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -2419,7 +2360,7 @@
             <div class="sidebar-actions">
                 <a href="/" class="action-btn">
                     <i class="bi bi-file-earmark-arrow-up"></i>
-                    <span>返回主页</span>
+                    <span>返回文件传输</span>
                 </a>
             </div>
             
