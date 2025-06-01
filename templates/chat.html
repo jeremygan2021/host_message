@@ -1410,62 +1410,180 @@
         .file-message {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(74, 144, 226, 0.1);
+            gap: 12px;
+            padding: 12px;
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: 12px;
+            margin: 8px 0;
+            border: 1px solid rgba(74, 144, 226, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .file-message:hover {
+            background: rgba(74, 144, 226, 0.08);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-icon-wrapper {
+            width: 48px;
+            height: 48px;
             border-radius: 8px;
-            margin: 5px 0;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        .file-message .file-icon {
+        .file-icon-wrapper i {
             font-size: 24px;
-            color: var(--primary-color);
+            color: white;
         }
 
-        .file-message .file-info {
+        .file-info {
             flex: 1;
+            min-width: 0;
         }
 
-        .file-message .file-name {
+        .file-info .file-name {
             font-weight: 500;
+            font-size: 0.95em;
             margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #333;
         }
 
-        .file-message .file-size {
-            font-size: 0.85em;
+        .file-details {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .file-details .file-size {
+            font-size: 0.8em;
             color: #666;
         }
 
-        .file-message .download-btn {
-            padding: 6px 12px;
+        .file-details .file-type {
+            font-size: 0.75em;
             background: var(--primary-color);
             color: white;
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: all 0.3s;
-        }
-
-        .file-message .download-btn:hover {
-            background: var(--secondary-color);
-            transform: translateY(-1px);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
         }
 
         .image-message {
-            max-width: 300px;
             position: relative;
+            max-width: 350px;
+            border-radius: 12px;
+            overflow: hidden;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
         }
 
         .image-message img {
             width: 100%;
-            border-radius: 8px;
-            transition: transform 0.3s;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
         }
 
         .image-message:hover img {
             transform: scale(1.02);
+        }
+
+        /* 图片悬停下载按钮 */
+        .image-download-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(2px);
+            pointer-events: none;
+        }
+
+        .image-message:hover .image-download-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 移动端图片点击状态 */
+        .image-message.mobile-clicked .image-download-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .image-download-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-download-btn:hover {
+            background: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-download-btn i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        /* 图片信息显示 */
+        .image-info-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 12px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .image-message:hover .image-info-overlay,
+        .image-message.mobile-clicked .image-info-overlay {
+            transform: translateY(0);
+        }
+
+        .image-info-overlay .file-name {
+            font-size: 0.9em;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .image-info-overlay .file-size {
+            font-size: 0.8em;
+            opacity: 0.8;
         }
 
         .drag-overlay {
@@ -1708,6 +1826,13 @@
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             margin: 8px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .media-message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
         }
 
         /* 音频消息特殊样式 - 更宽的容器 */
@@ -1723,6 +1848,7 @@
             padding: 12px;
             background: rgba(74, 144, 226, 0.05);
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
         .media-header i {
@@ -1769,123 +1895,88 @@
             background: #000;
         }
 
-        /* 图片消息优化 */
-        .image-message {
-            position: relative;
-            max-width: 350px;
-            border-radius: 12px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .image-message img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.3s ease;
-        }
-
-        .image-message:hover img {
-            transform: scale(1.02);
-        }
-
-        .media-overlay {
+        /* 音频消息悬停下载按钮 */
+        .audio-download-overlay {
             position: absolute;
-            bottom: 0;
-            left: 0;
+            top: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-            color: white;
-            padding: 12px;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .image-message:hover .media-overlay {
-            transform: translateY(0);
-        }
-
-        .media-info .file-name {
-            font-size: 0.9em;
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .media-info .file-size {
-            font-size: 0.8em;
-            opacity: 0.8;
-        }
-
-        /* 优化文件消息样式 */
-        .file-message {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: rgba(74, 144, 226, 0.05);
-            border-radius: 12px;
-            margin: 8px 0;
-            border: 1px solid rgba(74, 144, 226, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .file-message:hover {
-            background: rgba(74, 144, 226, 0.08);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .file-icon-wrapper {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-            background: var(--primary-color);
+            bottom: 0;
+            width: 80px;
+            background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.1));
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
-        .file-icon-wrapper i {
-            font-size: 24px;
-            color: white;
+        .audio-message:hover .audio-download-overlay {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .file-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .file-info .file-name {
-            font-weight: 500;
-            font-size: 0.95em;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: #333;
-        }
-
-        .file-details {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .file-details .file-size {
-            font-size: 0.8em;
-            color: #666;
-        }
-
-        .file-details .file-type {
-            font-size: 0.75em;
+        .audio-download-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             background: var(--primary-color);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+        }
+
+        .audio-download-btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+        }
+
+        .audio-download-btn i {
+            font-size: 20px;
             color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 500;
+        }
+
+        /* 视频消息悬停下载按钮 */
+        .video-download-overlay {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .video-message:hover .video-download-overlay {
+            opacity: 1;
+        }
+
+        .video-download-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .video-download-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .video-download-btn i {
+            font-size: 18px;
+            color: white;
         }
 
         /* 响应式设计 */
@@ -1894,11 +1985,66 @@
                 max-width: 100%;
             }
 
+            /* 移动端图片消息优化 */
+            .image-message {
+                max-width: 100%;
+                margin: 12px 0;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .image-message img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            /* 移动端默认隐藏下载按钮，点击后才显示 */
+            .image-download-overlay {
+                opacity: 0;
+                pointer-events: none;
+                background: rgba(0, 0, 0, 0.6);
+            }
+
+            /* 移动端点击状态显示下载按钮 */
+            .image-message.mobile-clicked .image-download-overlay {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .image-download-btn {
+                width: 50px;
+                height: 50px;
+                background: rgba(255, 255, 255, 0.95);
+            }
+
+            .image-download-btn i {
+                font-size: 20px;
+            }
+
             /* 移动端音频消息优化 */
             .audio-message {
                 max-width: 100%;
                 min-width: 300px;
                 margin: 12px 0;
+            }
+
+            /* 移动端音频下载按钮始终可见 */
+            .audio-download-overlay {
+                opacity: 1;
+                pointer-events: auto;
+                width: 70px;
+                background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.08));
+            }
+
+            .audio-download-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            .audio-download-btn i {
+                font-size: 18px;
             }
 
             /* 移动端音频播放器优化 */
@@ -1933,32 +2079,22 @@
                 font-weight: 500;
             }
 
-            /* 移动端下载按钮优化 */
-            .audio-message .copy-btn.download-btn {
-                width: 44px;
-                height: 44px;
-                border-radius: 50%;
-                background: var(--primary-color);
-                color: white;
-                border: none;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: relative;
-                right: 0;
-                top: 0;
-                transform: none;
+            /* 移动端视频下载按钮 */
+            .video-download-overlay {
                 opacity: 1;
-                margin-left: 8px;
+                top: 12px;
+                right: 12px;
             }
 
-            .audio-message .copy-btn.download-btn i {
-                font-size: 18px;
-                color: white;
+            .video-download-btn {
+                width: 40px;
+                height: 40px;
+                background: rgba(0, 0, 0, 0.8);
+                border: 2px solid rgba(255, 255, 255, 0.9);
             }
 
-            .image-message {
-                max-width: 100%;
+            .video-download-btn i {
+                font-size: 16px;
             }
 
             .video-message .media-player {
@@ -1980,6 +2116,78 @@
 
             .file-icon-wrapper i {
                 font-size: 20px;
+            }
+
+            /* 移动端图片信息优化 */
+            .image-info-overlay {
+                transform: translateY(100%);
+                background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+                padding: 8px 12px;
+            }
+
+            .image-info-overlay .file-name {
+                font-size: 0.85em;
+            }
+
+            .image-info-overlay .file-size {
+                font-size: 0.75em;
+            }
+
+            /* 移动端图片点击提示 */
+            .image-click-hint {
+                position: absolute;
+                top: 8px;
+                left: 8px;
+                background: rgba(0, 0, 0, 0.7);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 0.75em;
+                opacity: 0.9;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+                font-weight: 500;
+                backdrop-filter: blur(4px);
+            }
+
+            .image-message.mobile-clicked .image-click-hint {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            /* 移动端触摸优化 */
+            .image-download-btn:active,
+            .audio-download-btn:active,
+            .video-download-btn:active {
+                transform: scale(0.95);
+            }
+
+            /* 移动端文件消息优化 */
+            .file-message {
+                padding: 10px;
+                margin: 8px 0;
+            }
+
+            .file-icon-wrapper {
+                width: 40px;
+                height: 40px;
+            }
+
+            .file-icon-wrapper i {
+                font-size: 20px;
+            }
+
+            .file-info .file-name {
+                font-size: 0.9em;
+            }
+
+            .file-details .file-size {
+                font-size: 0.75em;
+            }
+
+            .file-details .file-type {
+                font-size: 0.7em;
+                padding: 1px 4px;
             }
         }
 
@@ -2040,60 +2248,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 移动端音频播放器控件优化 */
-        @media (max-width: 768px) {
-            /* 音频播放器控件触摸优化 */
-            .audio-message .media-player::-webkit-media-controls-play-button {
-                width: 48px;
-                height: 48px;
-                background-color: var(--primary-color);
-                border-radius: 50%;
-                margin: 0 12px 0 8px;
-            }
-
-            .audio-message .media-player::-webkit-media-controls-timeline {
-                height: 6px;
-                background-color: rgba(74, 144, 226, 0.2);
-                border-radius: 3px;
-                margin: 0 8px;
-                min-width: 120px;
-            }
-
-            .audio-message .media-player::-webkit-media-controls-current-time-display,
-            .audio-message .media-player::-webkit-media-controls-time-remaining-display {
-                color: var(--primary-color);
-                font-size: 14px;
-                font-weight: 500;
-                margin: 0 4px;
-            }
-
-            .audio-message .media-player::-webkit-media-controls-volume-slider {
-                width: 60px;
-                height: 6px;
-                margin: 0 8px;
-            }
-
-            .audio-message .media-player::-webkit-media-controls-mute-button {
-                width: 32px;
-                height: 32px;
-                margin: 0 4px;
-            }
-
-            /* 音频消息悬停效果移动端优化 */
-            .audio-message:active {
-                transform: scale(0.98);
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            /* 移动端播放器面板优化 */
-            .audio-message .media-player::-webkit-media-controls-panel {
-                background-color: #f8f9fa;
-                border-radius: 0 0 12px 12px;
-                padding: 4px 8px;
-            }
-        }
-
-        /* 超小屏幕音频优化 */
+        /* 超小屏幕优化 */
         @media (max-width: 480px) {
             .audio-message {
                 min-width: 100px;
@@ -2118,19 +2273,40 @@
                 font-size: 0.8em;
             }
 
-            .audio-message .copy-btn.download-btn {
-                width: 40px;
-                height: 40px;
-                margin-left: 6px;
+            .audio-download-overlay {
+                width: 60px;
             }
 
-            .audio-message .copy-btn.download-btn i {
+            .audio-download-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .audio-download-btn i {
                 font-size: 16px;
             }
 
             .audio-message .media-player {
                 height: 65px;
                 padding: 6px;
+            }
+
+            .image-download-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            .image-download-btn i {
+                font-size: 18px;
+            }
+
+            .video-download-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            .video-download-btn i {
+                font-size: 14px;
             }
 
             /* 超小屏幕播放器控件 */
@@ -2160,6 +2336,34 @@
                 width: 28px;
                 height: 28px;
                 margin: 0 3px;
+            }
+
+            /* 超小屏幕文件消息优化 */
+            .file-message {
+                padding: 8px;
+                gap: 8px;
+            }
+
+            .file-icon-wrapper {
+                width: 36px;
+                height: 36px;
+            }
+
+            .file-icon-wrapper i {
+                font-size: 18px;
+            }
+
+            .file-info .file-name {
+                font-size: 0.85em;
+            }
+
+            .file-details .file-size {
+                font-size: 0.7em;
+            }
+
+            .file-details .file-type {
+                font-size: 0.65em;
+                padding: 1px 3px;
             }
         }
 
@@ -2343,6 +2547,1210 @@
             .admin-function-btn:active {
                 transform: scale(0.98);
             }
+        }
+
+        /* 超小屏幕优化 */
+        @media (max-width: 360px) {
+            .mode-item {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .chat-item-avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .chat-item-name {
+                font-size: 0.9em;
+            }
+
+            .chat-item-last-msg {
+                font-size: 0.8em;
+            }
+        }
+
+        .file-message {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: 12px;
+            margin: 8px 0;
+            border: 1px solid rgba(74, 144, 226, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .file-message:hover {
+            background: rgba(74, 144, 226, 0.08);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .file-icon-wrapper i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-info .file-name {
+            font-weight: 500;
+            font-size: 0.95em;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #333;
+        }
+
+        .file-details {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .file-details .file-size {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .file-details .file-type {
+            font-size: 0.75em;
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .image-message {
+            position: relative;
+            max-width: 350px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-message img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .image-message:hover img {
+            transform: scale(1.02);
+        }
+
+        /* 图片悬停下载按钮 */
+        .image-download-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(2px);
+            pointer-events: none;
+        }
+
+        .image-message:hover .image-download-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 移动端图片点击状态 */
+        .image-message.mobile-clicked .image-download-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .image-download-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-download-btn:hover {
+            background: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-download-btn i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        /* 图片信息显示 */
+        .image-info-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 12px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .image-message:hover .image-info-overlay,
+        .image-message.mobile-clicked .image-info-overlay {
+            transform: translateY(0);
+        }
+
+        .image-info-overlay .file-name {
+            font-size: 0.9em;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .image-info-overlay .file-size {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        .drag-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .drag-overlay.active {
+            display: flex;
+        }
+
+        .drag-overlay i {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+        }
+
+        .drag-overlay h3 {
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+
+        /* 优化复制按钮样式 */
+        .copy-btn {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* 发送消息的复制按钮位置 */
+        .message-container.sent .copy-btn {
+            left: -40px; /* 调整到消息外侧 */
+        }
+
+        /* 接收消息的复制按钮位置 */
+        .message-container.received .copy-btn {
+            right: -40px; /* 调整到外 */
+        }
+
+        .message-container:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .copy-btn i {
+            color: var(--primary-color);
+            font-size: 1.1em;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .copy-btn {
+                opacity: 0.8; /* 移动端保持半透明可见 */
+                width: 28px;
+                height: 28px;
+            }
+
+            .message-container.sent .copy-btn {
+                left: -34px;
+            }
+
+            .message-container.received .copy-btn {
+                right: -34px;
+            }
+
+            /* 增加按钮点击区域 */
+            .copy-btn::before {
+                content: '';
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                bottom: -8px;
+                left: -8px;
+            }
+        }
+
+        /* 优化复制成功提示 */
+        .copy-toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+            transform: translate(-50%, -10px);
+        }
+
+        /* 在现有的 .copy-btn 样式基础上添加 */
+        .copy-btn.download-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .copy-btn.download-btn:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .copy-btn.download-btn i {
+            color: white;
+        }
+
+        /* 添加上传按钮样式 */
+        .upload-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .upload-btn i {
+            font-size: 1.5em;
+        }
+
+        /* 隐藏文件输入框 */
+        .file-input {
+            display: none;
+        }
+
+        /* 添加系统消息样式 */
+        .system-message {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .system-content {
+            background: rgba(74, 144, 226, 0.1);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .system-content i {
+            font-size: 1em;
+        }
+
+        /* 历史消息样式 */
+        .history-message {
+            opacity: 1;
+        }
+
+        /* 历史消息中的图片不变灰 */
+        .history-message .image-message,
+        .history-message .media-message {
+            opacity: 1;
+        }
+
+        .history-badge {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.7em;
+            margin-left: 6px;
+            font-weight: 500;
+        }
+
+        .history-message .message {
+            border-left: 3px solid rgba(255, 152, 0, 0.3);
+            padding-left: 15px;
+        }
+
+        /* 但是文本消息保持历史样式 */
+        .history-message .message-content {
+            opacity: 0.8;
+        }
+
+        /* 优化历史消息在移动端的显示 */
+        @media (max-width: 768px) {
+            .history-badge {
+                font-size: 0.65em;
+                padding: 1px 4px;
+            }
+            
+            .system-content {
+                font-size: 0.85em;
+                padding: 6px 12px;
+            }
+        }
+
+        /* 媒体消息通用样式 */
+        .media-message {
+            max-width: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin: 8px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .media-message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 音频消息特殊样式 - 更宽的容器 */
+        .audio-message {
+            max-width: 450px;
+            min-width: 350px;
+        }
+
+        .media-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(74, 144, 226, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .media-header i {
+            font-size: 24px;
+            color: var(--primary-color);
+            width: 32px;
+            text-align: center;
+        }
+
+        .media-title {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .media-title .file-name {
+            font-weight: 500;
+            font-size: 0.95em;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .media-title .file-size {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        /* 媒体播放器样式 */
+        .media-player {
+            width: 100%;
+            outline: none;
+            background: #000;
+        }
+
+        .audio-message .media-player {
+            height: 60px;
+            width: 100%;
+            background: #f8f9fa;
+        }
+
+        .video-message .media-player {
+            max-height: 300px;
+            background: #000;
+        }
+
+        /* 音频消息悬停下载按钮 */
+        .audio-download-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 80px;
+            background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .audio-message:hover .audio-download-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .audio-download-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+        }
+
+        .audio-download-btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+        }
+
+        .audio-download-btn i {
+            font-size: 20px;
+            color: white;
+        }
+
+        /* 视频消息悬停下载按钮 */
+        .video-download-overlay {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .video-message:hover .video-download-overlay {
+            opacity: 1;
+        }
+
+        .video-download-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .video-download-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .video-download-btn i {
+            font-size: 18px;
+            color: white;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .media-message {
+                max-width: 100%;
+            }
+
+            /* 移动端图片消息优化 */
+            .image-message {
+                max-width: 100%;
+                margin: 12px 0;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .image-message img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            /* 移动端默认隐藏下载按钮，点击后才显示 */
+            .image-download-overlay {
+                opacity: 0;
+                pointer-events: none;
+                background: rgba(0, 0, 0, 0.6);
+            }
+
+            /* 移动端点击状态显示下载按钮 */
+            .image-message.mobile-clicked .image-download-overlay {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .image-download-btn {
+                width: 50px;
+                height: 50px;
+                background: rgba(255, 255, 255, 0.95);
+            }
+
+            .image-download-btn i {
+                font-size: 20px;
+            }
+
+            /* 移动端音频消息优化 */
+            .audio-message {
+                max-width: 100%;
+                min-width: 300px;
+                margin: 12px 0;
+            }
+
+            /* 移动端音频下载按钮始终可见 */
+            .audio-download-overlay {
+                opacity: 1;
+                pointer-events: auto;
+                width: 70px;
+                background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.08));
+            }
+
+            .audio-download-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            .audio-download-btn i {
+                font-size: 18px;
+            }
+
+            /* 移动端音频播放器优化 */
+            .audio-message .media-player {
+                height: 70px;
+                padding: 8px;
+                background: #f8f9fa;
+                border-radius: 0 0 12px 12px;
+            }
+
+            /* 移动端媒体头部优化 */
+            .audio-message .media-header {
+                padding: 14px 16px;
+                background: rgba(74, 144, 226, 0.08);
+            }
+
+            .audio-message .media-header i {
+                font-size: 26px;
+                width: 36px;
+                color: var(--primary-color);
+            }
+
+            .audio-message .media-title .file-name {
+                font-size: 1em;
+                font-weight: 600;
+                margin-bottom: 4px;
+            }
+
+            .audio-message .media-title .file-size {
+                font-size: 0.85em;
+                color: #666;
+                font-weight: 500;
+            }
+
+            /* 移动端视频下载按钮 */
+            .video-download-overlay {
+                opacity: 1;
+                top: 12px;
+                right: 12px;
+            }
+
+            .video-download-btn {
+                width: 40px;
+                height: 40px;
+                background: rgba(0, 0, 0, 0.8);
+                border: 2px solid rgba(255, 255, 255, 0.9);
+            }
+
+            .video-download-btn i {
+                font-size: 16px;
+            }
+
+            .video-message .media-player {
+                max-height: 250px;
+            }
+
+            .media-header {
+                padding: 10px;
+            }
+
+            .file-message {
+                padding: 10px;
+            }
+
+            .file-icon-wrapper {
+                width: 40px;
+                height: 40px;
+            }
+
+            .file-icon-wrapper i {
+                font-size: 20px;
+            }
+
+            /* 移动端图片信息优化 */
+            .image-info-overlay {
+                transform: translateY(100%);
+                background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+                padding: 8px 12px;
+            }
+
+            .image-info-overlay .file-name {
+                font-size: 0.85em;
+            }
+
+            .image-info-overlay .file-size {
+                font-size: 0.75em;
+            }
+
+            /* 移动端图片点击提示 */
+            .image-click-hint {
+                position: absolute;
+                top: 8px;
+                left: 8px;
+                background: rgba(0, 0, 0, 0.7);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 0.75em;
+                opacity: 0.9;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+                font-weight: 500;
+                backdrop-filter: blur(4px);
+            }
+
+            .image-message.mobile-clicked .image-click-hint {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            /* 移动端触摸优化 */
+            .image-download-btn:active,
+            .audio-download-btn:active,
+            .video-download-btn:active {
+                transform: scale(0.95);
+            }
+
+            /* 移动端文件消息优化 */
+            .file-message {
+                padding: 10px;
+                margin: 8px 0;
+            }
+
+            .file-icon-wrapper {
+                width: 40px;
+                height: 40px;
+            }
+
+            .file-icon-wrapper i {
+                font-size: 20px;
+            }
+
+            .file-info .file-name {
+                font-size: 0.9em;
+            }
+
+            .file-details .file-size {
+                font-size: 0.75em;
+            }
+
+            .file-details .file-type {
+                font-size: 0.7em;
+                padding: 1px 4px;
+            }
+        }
+
+        /* 播放器控件优化 */
+        .media-player::-webkit-media-controls-panel {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .audio-message .media-player::-webkit-media-controls-panel {
+            background-color: #f8f9fa;
+        }
+
+        /* 音频播放器进度条优化 */
+        .audio-message .media-player::-webkit-media-controls-timeline {
+            background-color: rgba(74, 144, 226, 0.2);
+            border-radius: 2px;
+            margin: 0 8px;
+        }
+
+        .audio-message .media-player::-webkit-media-controls-current-time-display,
+        .audio-message .media-player::-webkit-media-controls-time-remaining-display {
+            color: var(--primary-color);
+            font-size: 12px;
+        }
+
+        /* 音频播放按钮优化 */
+        .audio-message .media-player::-webkit-media-controls-play-button {
+            background-color: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        /* 音频消息容器优化 */
+        .audio-message {
+            transition: all 0.3s ease;
+        }
+
+        .audio-message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 加载状态 */
+        .media-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .media-loading i {
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            .audio-message {
+                min-width: 100px;
+                margin: 6px 0;
+            }
+
+            .audio-message .media-header {
+                padding: 12px 14px;
+            }
+
+            .audio-message .media-header i {
+                font-size: 24px;
+                width: 32px;
+            }
+
+            .audio-message .media-title .file-name {
+                font-size: 0.95em;
+                margin-bottom: 3px;
+            }
+
+            .audio-message .media-title .file-size {
+                font-size: 0.8em;
+            }
+
+            .audio-download-overlay {
+                width: 60px;
+            }
+
+            .audio-download-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .audio-download-btn i {
+                font-size: 16px;
+            }
+
+            .audio-message .media-player {
+                height: 65px;
+                padding: 6px;
+            }
+
+            .image-download-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            .image-download-btn i {
+                font-size: 18px;
+            }
+
+            .video-download-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            .video-download-btn i {
+                font-size: 14px;
+            }
+
+            /* 超小屏幕播放器控件 */
+            .audio-message .media-player::-webkit-media-controls-play-button {
+                width: 42px;
+                height: 42px;
+                margin: 0 8px 0 6px;
+            }
+
+            .audio-message .media-player::-webkit-media-controls-timeline {
+                min-width: 100px;
+                margin: 0 6px;
+            }
+
+            .audio-message .media-player::-webkit-media-controls-current-time-display,
+            .audio-message .media-player::-webkit-media-controls-time-remaining-display {
+                font-size: 13px;
+                margin: 0 3px;
+            }
+
+            .audio-message .media-player::-webkit-media-controls-volume-slider {
+                width: 50px;
+                margin: 0 6px;
+            }
+
+            .audio-message .media-player::-webkit-media-controls-mute-button {
+                width: 28px;
+                height: 28px;
+                margin: 0 3px;
+            }
+
+            /* 超小屏幕文件消息优化 */
+            .file-message {
+                padding: 8px;
+                gap: 8px;
+            }
+
+            .file-icon-wrapper {
+                width: 36px;
+                height: 36px;
+            }
+
+            .file-icon-wrapper i {
+                font-size: 18px;
+            }
+
+            .file-info .file-name {
+                font-size: 0.85em;
+            }
+
+            .file-details .file-size {
+                font-size: 0.7em;
+            }
+
+            .file-details .file-type {
+                font-size: 0.65em;
+                padding: 1px 3px;
+            }
+        }
+
+        /* 管理员设置样式 */
+        .admin-settings {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+        }
+
+        .admin-settings-header {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-input-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .admin-ip-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .admin-ip-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .admin-set-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 6px;
+            background: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .admin-set-btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .admin-set-btn i {
+            font-size: 1.1em;
+        }
+
+        .admin-status {
+            padding: 6px 10px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .admin-status-text {
+            font-size: 0.8em;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .admin-status.admin-set .admin-status-text {
+            color: #28a745;
+        }
+
+        .admin-status.is-admin .admin-status-text {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        /* 管理员功能样式 */
+        .admin-functions {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, #fff5f5 0%, #fff0f0 100%);
+        }
+
+        .admin-functions-header {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #dc3545;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-functions-header::before {
+            content: "👑";
+            font-size: 1.2em;
+        }
+
+        .admin-function-btn {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+        }
+
+        .admin-function-btn:hover {
+            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+
+        .admin-function-btn:active {
+            transform: translateY(0);
+        }
+
+        .admin-function-btn i {
+            font-size: 1.2em;
+        }
+
+        .clear-all-btn {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+
+        .clear-all-btn:hover {
+            background: linear-gradient(135deg, #bd2130 0%, #a71e2a 100%);
+        }
+
+        /* 移动端管理员样式优化 */
+        @media (max-width: 768px) {
+            .admin-settings {
+                margin: 0 12px;
+                border-radius: 12px;
+                background: #f8f9fa;
+            }
+
+            .admin-input-container {
+                gap: 10px;
+            }
+
+            .admin-ip-input {
+                padding: 10px 14px;
+                font-size: 16px; /* 防止iOS缩放 */
+            }
+
+            .admin-set-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .admin-functions {
+                margin: 0 12px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #fff5f5 0%, #fff0f0 100%);
+            }
+
+            .admin-function-btn {
+                padding: 14px 16px;
+                font-size: 1em;
+                border-radius: 10px;
+            }
+
+            .admin-function-btn:active {
+                transform: scale(0.98);
+            }
+        }
+
+        /* 超小屏幕图片消息优化 */
+        .image-message {
+            margin: 8px 0;
+            border-radius: 10px;
+        }
+
+        .image-download-btn {
+            width: 44px;
+            height: 44px;
+        }
+
+        .image-download-btn i {
+            font-size: 18px;
+        }
+
+        .image-click-hint {
+            font-size: 0.7em;
+            padding: 3px 6px;
+            top: 6px;
+            left: 6px;
+        }
+
+        .image-info-overlay {
+            padding: 6px 10px;
+        }
+
+        .image-info-overlay .file-name {
+            font-size: 0.8em;
+        }
+
+        .image-info-overlay .file-size {
+            font-size: 0.7em;
+        }
+
+        /* 超小屏幕播放器控件 */
+        .audio-message .media-player::-webkit-media-controls-play-button {
+            width: 42px;
+            height: 42px;
+            margin: 0 8px 0 6px;
         }
     </style>
 </head>
@@ -2854,18 +4262,19 @@
                     // 根据文件类型显示不同的内容
                     if (detectedFileType === 'image' || fileData.isImage) {
                         messageContent = `
-                            <div class="media-message image-message">
+                            <div class="media-message image-message" onclick="handleImageClick(this, event)">
                                 <img src="${fileData.filePath}" alt="${fileData.fileName}" 
-                                     onclick="window.open('${fileData.filePath}', '_blank')"
+                                     onclick="event.stopPropagation(); window.open('${fileData.filePath}', '_blank')"
                                      loading="lazy">
-                                <div class="media-overlay">
-                                    <div class="media-info">
-                                        <div class="file-name">${fileData.fileName}</div>
-                                        <div class="file-size">${formatFileSize(fileData.fileSize)}</div>
-                                    </div>
-                                    <button class="copy-btn download-btn" onclick="handleFileAction('${encodedFileData}')">
+                                <div class="image-click-hint">点击图片下载</div>
+                                <div class="image-download-overlay">
+                                    <button class="image-download-btn" onclick="event.stopPropagation(); handleFileAction('${encodedFileData}')">
                                         <i class="bi bi-download"></i>
                                     </button>
+                                </div>
+                                <div class="image-info-overlay">
+                                    <div class="file-name">${fileData.fileName}</div>
+                                    <div class="file-size">${formatFileSize(fileData.fileSize)}</div>
                                 </div>
                             </div>
                         `;
@@ -2878,14 +4287,16 @@
                                         <div class="file-name">${fileData.fileName}</div>
                                         <div class="file-size">${formatFileSize(fileData.fileSize)}</div>
                                     </div>
-                                    <button class="copy-btn download-btn" onclick="handleFileAction('${encodedFileData}')">
-                                        <i class="bi bi-download"></i>
-                                    </button>
                                 </div>
                                 <audio controls preload="metadata" class="media-player">
                                     <source src="${fileData.filePath}" type="${fileData.fileType || 'audio/mpeg'}">
                                     您的浏览器不支持音频播放。
                                 </audio>
+                                <div class="audio-download-overlay">
+                                    <button class="audio-download-btn" onclick="handleFileAction('${encodedFileData}')">
+                                        <i class="bi bi-download"></i>
+                                    </button>
+                                </div>
                             </div>
                         `;
                     } else if (detectedFileType === 'video') {
@@ -2897,14 +4308,16 @@
                                         <div class="file-name">${fileData.fileName}</div>
                                         <div class="file-size">${formatFileSize(fileData.fileSize)}</div>
                                     </div>
-                                    <button class="copy-btn download-btn" onclick="handleFileAction('${encodedFileData}')">
-                                        <i class="bi bi-download"></i>
-                                    </button>
                                 </div>
                                 <video controls preload="metadata" class="media-player">
                                     <source src="${fileData.filePath}" type="${fileData.fileType || 'video/mp4'}">
                                     您的浏览器不支持视频播放。
                                 </video>
+                                <div class="video-download-overlay">
+                                    <button class="video-download-btn" onclick="handleFileAction('${encodedFileData}')">
+                                        <i class="bi bi-download"></i>
+                                    </button>
+                                </div>
                             </div>
                         `;
                     } else {
@@ -4588,6 +6001,58 @@
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             }, 100);
         }
+
+        // 检测是否为移动设备
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                   window.innerWidth <= 768;
+        }
+
+        // 处理图片点击事件
+        function handleImageClick(imageElement, event) {
+            // 阻止事件冒泡
+            event.stopPropagation();
+            
+            // 只在移动端执行点击逻辑
+            if (!isMobileDevice()) {
+                return;
+            }
+            
+            // 切换点击状态
+            const isClicked = imageElement.classList.contains('mobile-clicked');
+            
+            // 先移除所有其他图片的点击状态
+            document.querySelectorAll('.image-message.mobile-clicked').forEach(img => {
+                if (img !== imageElement) {
+                    img.classList.remove('mobile-clicked');
+                }
+            });
+            
+            if (isClicked) {
+                // 如果已经点击过，再次点击则隐藏下载按钮
+                imageElement.classList.remove('mobile-clicked');
+            } else {
+                // 显示下载按钮和信息
+                imageElement.classList.add('mobile-clicked');
+                
+                // 3秒后自动隐藏
+                setTimeout(() => {
+                    imageElement.classList.remove('mobile-clicked');
+                }, 3000);
+            }
+        }
+
+        // 添加全局点击事件监听，点击其他地方时隐藏所有图片下载按钮
+        document.addEventListener('click', function(event) {
+            if (!isMobileDevice()) return;
+            
+            // 如果点击的不是图片消息相关元素，则隐藏所有下载按钮
+            if (!event.target.closest('.image-message')) {
+                document.querySelectorAll('.image-message.mobile-clicked').forEach(img => {
+                    img.classList.remove('mobile-clicked');
+                });
+            }
+        });
     </script>
 </body>
 </html> 
