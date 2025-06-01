@@ -2464,6 +2464,7 @@
 
         // 添加IP名称映射相关变量
         let ipNameMapping = {};
+        let ipAvatarMapping = {};
         let availableUsers = [];
 
         // 管理员相关变量
@@ -2730,13 +2731,72 @@
             return colors[Math.abs(hash) % colors.length];
         }
 
+        // 创建头像元素的统一函数
+        function createAvatarElement(ip, size = '32px', fontSize = '1.1em') {
+            const avatar = generateAvatar(ip);
+            
+            if (avatar.type === 'image') {
+                // 生成回退emoji
+                const emojis = ['🌟', '🎯', '🎨', '🎭', '🎪', '🎫', '🎮', '🎲', '🎸', '🎺', 
+                             '🎭', '🎪', '🎨', '🎯', '🌟', '🎲', '🎮', '🎫', '🎸', '🎺'];
+                const fallbackEmoji = emojis[ip.split('.')[3] % emojis.length];
+                
+                return `
+                    <div style="
+                        width: ${size}; 
+                        height: ${size}; 
+                        border-radius: 50%; 
+                        background-color: ${avatar.color}; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        color: white; 
+                        font-size: ${fontSize}; 
+                        position: relative;
+                        overflow: hidden;
+                    ">
+                        <img src="${avatar.src}" alt="头像" 
+                            style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <span style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; align-items: center; justify-content: center;">${fallbackEmoji}</span>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div style="
+                        width: ${size}; 
+                        height: ${size}; 
+                        border-radius: 50%; 
+                        background-color: ${avatar.color}; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        color: white; 
+                        font-size: ${fontSize};
+                    ">
+                        ${avatar.icon}
+                    </div>
+                `;
+            }
+        }
+
         //// / 生成用户头像
         function generateAvatar(ip) {
+            // 如果有配置的头像，优先使用配置的头像
+            if (ipAvatarMapping[ip]) {
+                return {
+                    type: 'image',
+                    src: ipAvatarMapping[ip],
+                    color: generateColor(ip)
+                };
+            }
+            
             // 使用固定的 emoji 数组作为头像
             const emojis = ['🌟', '🎯', '🎨', '🎭', '🎪', '🎫', '🎮', '🎲', '🎸', '🎺', 
                          '🎭', '🎪', '🎨', '🎯', '🌟', '🎲', '🎮', '🎫', '🎸', '🎺'];
             const icon = emojis[ip.split('.')[3] % emojis.length];
             return {
+                type: 'emoji',
                 icon: icon,
                 color: generateColor(ip)
             };
@@ -2896,8 +2956,8 @@
             
             messageWrapper.innerHTML = `
                 <div class="user-tag">${userDisplayText} ${historyBadge}</div>
-                <div class="avatar" style="background-color: ${avatar.color}">
-                    ${avatar.icon}
+                <div class="avatar" style="background-color: transparent !important; padding: 0;">
+                    ${createAvatarElement(data.ip, '32px', '1.1em')}
                 </div>
                 <div class="message-content-wrapper">
                     <div class="message ${isCurrentUser ? 'sent' : 'received'}">
@@ -3260,14 +3320,14 @@
             let chatItem = document.querySelector(`.chat-item[data-chat="${ip}"]`);
             
             if (!chatItem) {
-                const avatar = generateAvatar(ip);
                 const displayName = getDisplayName(ip);
+                
                 chatItem = document.createElement('div');
                 chatItem.className = 'chat-item';
                 chatItem.setAttribute('data-chat', ip);
                 chatItem.innerHTML = `
-                    <div class="chat-item-avatar" style="background-color: ${avatar.color}">
-                        ${avatar.icon}
+                    <div class="chat-item-avatar" style="background-color: transparent !important; padding: 0;">
+                        ${createAvatarElement(ip, '40px', '1.2em')}
                     </div>
                     <div class="chat-item-info">
                         <div class="chat-item-name">${displayName}</div>
@@ -4250,7 +4310,9 @@
                 const response = await fetch('/get_ip_names');
                 const data = await response.json();
                 ipNameMapping = data.ip_vs_name || {};
+                ipAvatarMapping = data.ip_vs_avatar || {};
                 console.log('IP名称映射已加载:', ipNameMapping);
+                console.log('IP头像映射已加载:', ipAvatarMapping);
                 
                 // 更新可用用户列表
                 availableUsers = Object.keys(ipNameMapping).filter(ip => ip !== myIp);
@@ -4392,7 +4454,7 @@
             // 添加预设用户列表
             availableUsers.forEach(ip => {
                 const name = getDisplayName(ip);
-                const avatar = generateAvatar(ip);
+                
                 dialogHTML += `
                     <div class="user-selector-item" onclick="selectPrivateChatUser('${ip}')" style="
                         display: flex;
@@ -4404,18 +4466,9 @@
                         margin-bottom: 8px;
                         border: 1px solid #eee;
                     " onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='transparent'">
-                        <div style="
-                            width: 40px;
-                            height: 40px;
-                            border-radius: 50%;
-                            background-color: ${avatar.color};
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            color: white;
-                            font-size: 1.2em;
-                            margin-right: 12px;
-                        ">${avatar.icon}</div>
+                        <div style="margin-right: 12px;">
+                            ${createAvatarElement(ip, '40px', '1.2em')}
+                        </div>
                         <div style="flex: 1;">
                             <div style="font-weight: 500; margin-bottom: 2px;">${name}</div>
                             <div style="font-size: 0.8em; color: #666;">${ip}</div>

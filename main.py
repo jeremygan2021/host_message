@@ -24,6 +24,7 @@ with open(os.path.join(os.path.dirname(__file__), "database", "ip_list.json"), "
 
 admin_ip = ip_list["admin_ip"]
 ip_vs_name = ip_list["ip_vs_name"]
+ip_vs_avatar = ip_list["ip_vs_avatar"]
 
 print(f"管理员IP: {admin_ip}")
 
@@ -1020,11 +1021,20 @@ async def shutdown_event():
 # 添加获取IP名称映射的端点
 @app.get("/get_ip_names")
 async def get_ip_names():
-    """获取IP到名称的映射关系"""
-    return {
-        "ip_vs_name": ip_vs_name,
-        "admin_ip": admin_ip
-    }
+    """获取IP名称和头像映射"""
+    try:
+        return {
+            "ip_vs_name": ip_vs_name,
+            "ip_vs_avatar": ip_vs_avatar,
+            "status": "success"
+        }
+    except Exception as e:
+        return {
+            "ip_vs_name": {},
+            "ip_vs_avatar": {},
+            "status": "error",
+            "message": str(e)
+        }
 
 if __name__ == "__main__":
     uvicorn.run(
