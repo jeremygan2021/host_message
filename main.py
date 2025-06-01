@@ -44,6 +44,7 @@ app.add_middleware(
 )
 
 # 创建上传文件存储目录
+#UPLOAD_DIR = "/mnt/server/host_message_files"
 UPLOAD_DIR = "uploads"
 CHAT_HISTORY_DIR = "chat_history"
 if not os.path.exists(UPLOAD_DIR):
