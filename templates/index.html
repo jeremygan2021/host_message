@@ -1704,7 +1704,7 @@
                                 <div class="file-content">
                                     <div class="file-name">${file.name}</div>
                                     <div class="file-uploader">
-                                        <i class="fas fa-user"></i> 上传者: ${file.uploader_ip}
+                                        <i class="fas fa-user"></i> 上传者: ${file.uploader_username || file.uploader_ip}
                                     </div>
                                     ${file.comment ? `
                                         <div class="file-comment">

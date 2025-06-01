@@ -638,7 +638,13 @@ async def upload_file(
     else:
         # 使用简化模式，直接使用IP
         uploader_ip = get_real_client_ip(request=request)
-        uploader_username = f"用户_{uploader_ip}"
+        # 优化用户名显示：如果有映射名称就直接使用，否则显示"用户_IP"
+        mapped_name = ip_vs_name.get(str(uploader_ip))
+        if mapped_name:
+            uploader_username = mapped_name + "@" + uploader_ip
+            print(f"uploader_username: {uploader_username}({uploader_ip})")
+        else:
+            uploader_username = f"用户ip_{uploader_ip}"
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{timestamp}_{file.filename}"
