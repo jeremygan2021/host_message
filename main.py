@@ -16,6 +16,8 @@ from typing import Dict, List, Optional
 import uuid
 from dataclasses import dataclass, asdict
 from collections import defaultdict
+import secrets
+import base64
 
 # 配置FastAPI应用，优化大文件上传
 app = FastAPI(
@@ -23,6 +25,67 @@ app = FastAPI(
     description="高效的局域网文件传输和聊天系统",
     version="2.0.0"
 )
+
+# HTTP Basic 认证配置
+security = HTTPBasic()
+
+# 127.0.0.1 访问认证配置
+LOCALHOST_USERNAME = "tangledupai"
+LOCALHOST_PASSWORD = "123tangledup-ai"
+
+def verify_credentials(credentials: HTTPBasicCredentials = Depends(security)):
+    """验证用户名和密码"""
+    correct_username = secrets.compare_digest(credentials.username, LOCALHOST_USERNAME)
+    correct_password = secrets.compare_digest(credentials.password, LOCALHOST_PASSWORD)
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
+
+def require_auth_for_localhost(request: Request):
+    """检查是否需要对127.0.0.1进行身份验证"""
+    client_ip = get_real_client_ip(request=request)
+    return client_ip == "127.0.0.1"
+
+def conditional_auth(request: Request):
+    """条件性身份验证：只对127.0.0.1要求认证"""
+    client_ip = get_real_client_ip(request=request)
+    if client_ip == "127.0.0.1":
+        # 获取Basic Auth header
+        authorization = request.headers.get("authorization")
+        if not authorization or not authorization.startswith("Basic "):
+            raise HTTPException(
+                status_code=401,
+                detail="Authentication required for localhost access",
+                headers={"WWW-Authenticate": "Basic"},
+            )
+        
+        # 解析认证信息
+        try:
+            encoded_credentials = authorization.split(" ")[1]
+            decoded_credentials = base64.b64decode(encoded_credentials).decode("utf-8")
+            username, password = decoded_credentials.split(":", 1)
+            
+            # 验证凭据
+            correct_username = secrets.compare_digest(username, LOCALHOST_USERNAME)
+            correct_password = secrets.compare_digest(password, LOCALHOST_PASSWORD)
+            if not (correct_username and correct_password):
+                raise HTTPException(
+                    status_code=401,
+                    detail="Invalid authentication credentials",
+                    headers={"WWW-Authenticate": "Basic"},
+                )
+        except (ValueError, UnicodeDecodeError):
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid authentication format",
+                headers={"WWW-Authenticate": "Basic"},
+            )
+    
+    return True
 
 with open(os.path.join(os.path.dirname(__file__), "database", "ip_list.json"), "r") as f:
     ip_list = json.load(f)
@@ -543,14 +606,18 @@ async def get_private_chat_history(session_id: str, target_username: str, limit:
     }
 
 @app.get("/")
-async def read_root():
+async def read_root(request: Request, auth: bool = Depends(conditional_auth)):
+    """
+    主页面路由 - 对127.0.0.1访问需要身份验证
+    """
+    # 条件认证已经在依赖项中处理
     with open("templates/index.html", "r", encoding="utf-8") as f:
         html_content = f.read()
     return HTMLResponse(content=html_content)
 
 @app.get("/login")
-async def login_page():
-    """登录页面"""
+async def login_page(request: Request, auth: bool = Depends(conditional_auth)):
+    """登录页面 - 对127.0.0.1访问需要身份验证"""
     with open("templates/login.html", "r", encoding="utf-8") as f:
         html_content = f.read()
     return HTMLResponse(content=html_content)
@@ -747,15 +814,15 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
         print(f"User {user.username} disconnected")
 
 @app.get("/chat")
-async def chat_page():
-    """聊天页面 - 需要登录验证"""
+async def chat_page(request: Request, auth: bool = Depends(conditional_auth)):
+    """聊天页面 - 对127.0.0.1访问需要身份验证"""
     with open("templates/chat.html", "r", encoding="utf-8") as f:
         html_content = f.read()
     return HTMLResponse(content=html_content)
 
 @app.get("/test")
-async def test_chat_page():
-    """测试聊天页面"""
+async def test_chat_page(request: Request, auth: bool = Depends(conditional_auth)):
+    """测试聊天页面 - 对127.0.0.1访问需要身份验证"""
     with open("test_chat.html", "r", encoding="utf-8") as f:
         html_content = f.read()
     return HTMLResponse(content=html_content)
