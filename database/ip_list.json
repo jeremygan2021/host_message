@@ -10,7 +10,7 @@
         "6.6.6.66": "长风"
     },
     "ip_vs_avatar": {
-        "127.0.0.1": "/image/avatar/ag.png",
+        "127.0.0.1": "/image/avatar/server.png",
         "6.6.6.88": "/image/avatar/ag.png",
         "6.6.6.108": "/image/avatar/ag.png",
         "6.6.6.81": "/image/avatar/ubuntu_wifi.png",
