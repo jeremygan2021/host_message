@@ -17,7 +17,12 @@ import uuid
 from dataclasses import dataclass, asdict
 from collections import defaultdict
 
-app = FastAPI()
+# 配置FastAPI应用，优化大文件上传
+app = FastAPI(
+    title="局域网文件传输系统",
+    description="高效的局域网文件传输和聊天系统",
+    version="2.0.0"
+)
 
 with open(os.path.join(os.path.dirname(__file__), "database", "ip_list.json"), "r") as f:
     ip_list = json.load(f)
@@ -34,13 +39,16 @@ print(f"管理员IP: {admin_ip}")
 
 
 
-# 允许跨域请求
+# 允许跨域请求 - 优化大文件上传配置
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    # 添加大文件上传相关配置
+    expose_headers=["Content-Length", "Content-Range"],
+    max_age=3600,  # 预检请求缓存时间
 )
 
 # 创建上传文件存储目录
@@ -569,19 +577,19 @@ async def upload_file(
     filename = f"{timestamp}_{file.filename}"
     file_path = os.path.join(UPLOAD_DIR, filename)
     
-    # 优化块大小和写入策略
-    chunk_size = 1024 * 1024  # 1MB chunks
+    # 进一步优化大文件传输 - 局域网高速传输配置
+    # 将chunk_size增加到16MB，最大化局域网传输效率
+    chunk_size = 16 * 1024 * 1024  # 16MB chunks for maximum LAN performance
     total_size = 0
     
     try:
-        # 使用异步文件写入
-        async with aiofiles.open(file_path, "wb") as f:
+        # 高性能异步文件写入，专为局域网大文件传输优化
+        async with aiofiles.open(file_path, "wb", buffering=chunk_size) as f:
+            # 移除所有延迟和控制权释放，让传输尽可能快
             while chunk := await file.read(chunk_size):
                 await f.write(chunk)
                 total_size += len(chunk)
-                # 每写入10MB释放一次控制权
-                if total_size % (10 * 1024 * 1024) == 0:
-                    await asyncio.sleep(0.01)
+                # 完全移除延迟 - 局域网环境下无需限速
     except Exception as e:
         # 清理失败的文件
         if os.path.exists(file_path):
@@ -1043,5 +1051,13 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8888, 
         reload=True,
-        access_log=True
+        access_log=True,
+        # 优化大文件上传配置
+        limit_max_requests=1000,        # 增加最大请求数
+        limit_concurrency=100,          # 增加并发限制
+        timeout_keep_alive=120,         # 保持连接时间
+        timeout_graceful_shutdown=30,   # 优雅关闭超时
+        # 移除文件大小限制，让系统处理大文件
+        app_dir=".",
+        workers=1                       # 单进程处理，避免文件锁冲突
     )
