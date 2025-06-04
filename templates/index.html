@@ -1718,7 +1718,7 @@
                                 <div><i class="fas fa-clock"></i> 上传时间：${file.created}</div>
                             </div>
                             <div class="file-actions">
-                                <a href="${file.path}" class="download-btn" target="_blank">
+                                <a href="/download/${file.name}" class="download-btn" target="_blank">
                                     <i class="fas fa-download"></i> 下载
                                 </a>
                                 <button class="delete-btn" onclick="deleteFile('${file.name}')">

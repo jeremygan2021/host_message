@@ -124,7 +124,7 @@ if not os.path.exists(CHAT_HISTORY_DIR):
     os.makedirs(CHAT_HISTORY_DIR)
 
 # 挂载静态文件目录
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 app.mount("/image", StaticFiles(directory="image"), name="image")
 
 # 用户管理
@@ -832,6 +832,36 @@ async def test_chat_page(request: Request, auth: bool = Depends(conditional_auth
     with open("test_chat.html", "r", encoding="utf-8") as f:
         html_content = f.read()
     return HTMLResponse(content=html_content)
+
+@app.get("/download/{filename}")
+async def download_file(filename: str):
+    """强制下载文件，而不是在浏览器中显示"""
+    try:
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        
+        if not os.path.exists(file_path):
+            raise HTTPException(status_code=404, detail="文件不存在")
+        
+        # 读取文件元数据获取原始文件名
+        metadata_path = os.path.join(UPLOAD_DIR, f"{filename}.meta")
+        original_name = filename  # 默认使用当前文件名
+        
+        if os.path.exists(metadata_path):
+            try:
+                with open(metadata_path, "r", encoding="utf-8") as f:
+                    metadata = json.load(f)
+                    original_name = metadata.get("original_name", filename)
+            except:
+                pass  # 如果读取元数据失败，使用默认文件名
+        
+        return FileResponse(
+            path=file_path,
+            filename=original_name,
+            media_type='application/octet-stream'  # 强制下载
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"下载失败: {str(e)}")
 
 @app.delete("/files/{filename}")
 async def delete_file(filename: str):
