@@ -38,9 +38,8 @@
 
         .nav-bar {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 30px;
+            flex-direction: column;
+            padding: 24px 30px;
             background: linear-gradient(135deg, var(--card-bg) 0%, rgba(245,247,250,0.8) 100%);
             border-radius: var(--border-radius);
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -49,8 +48,35 @@
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            min-height: 80px;
-            flex-wrap: nowrap;
+            gap: 18px;
+        }
+
+        .nav-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .nav-bottom-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 30px;
+            flex-wrap: wrap;
+            position: relative;
+            padding-top: 18px;
+        }
+
+        .nav-bottom-row::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.2), transparent);
         }
 
         @media (max-width: 1024px) {
@@ -125,10 +151,10 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 8px 16px;
+            gap: 15px;
+            padding: 12px 20px;
             background: rgba(74, 144, 226, 0.05);
-            border-radius: 20px;
+            border-radius: 22px;
             border: 1px solid rgba(74, 144, 226, 0.1);
             transition: all 0.3s ease;
             cursor: pointer;
@@ -141,13 +167,23 @@
         }
 
         .user-avatar {
-            width: 42px;
-            height: 42px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             border: 2px solid var(--primary-color);
             object-fit: cover;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            line-height: 1;
+            background: transparent;
+        }
+
+        .user-avatar.emoji-avatar {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(74, 144, 226, 0.2));
         }
 
         .user-info:hover .user-avatar {
@@ -227,36 +263,35 @@
         .nav-controls {
             display: flex;
             align-items: center;
-            gap: 25px;
-            flex-wrap: nowrap;
-            flex-shrink: 1;
-            min-width: 0;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .mobile-switches {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             align-items: center;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
 
         .nav-links a {
             color: var(--primary-color);
             text-decoration: none;
             transition: all var(--transition-speed);
-            padding: 10px 16px;
+            padding: 12px 20px;
             border-radius: 25px;
             background: rgba(74, 144, 226, 0.08);
             display: inline-flex;
             align-items: center;
             gap: 8px;
             font-weight: 500;
-            font-size: 0.9em;
+            font-size: 0.95em;
             border: 1px solid rgba(74, 144, 226, 0.15);
             position: relative;
             overflow: hidden;
@@ -651,55 +686,56 @@
 
             /* 导航栏优化 */
             .nav-bar {
-                padding: 16px 15px;
-                flex-direction: column;
+                padding: 18px 15px;
                 gap: 16px;
                 margin-bottom: 20px;
-                min-height: auto;
+            }
+
+            .nav-top-row {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
             }
 
             .nav-bar h1 {
                 font-size: 1.4em;
-                width: 100%;
-                margin-bottom: 8px;
-                text-align: center;
                 justify-content: center;
-                order: 1;
             }
 
             .nav-bar h1 img {
                 height: 28px !important;
             }
 
-            .nav-controls {
+            .nav-bottom-row {
                 flex-direction: column;
-                gap: 12px;
-                width: 100%;
-                position: relative;
-                order: 2;
+                gap: 16px;
+                padding-top: 12px;
             }
 
-            .nav-controls::before {
+            .nav-bottom-row::before {
                 display: none;
             }
 
             /* 移动端开关组合 */
             .mobile-switches {
-                display: flex;
-                gap: 8px;
-                width: 100%;
+                gap: 10px;
                 justify-content: center;
             }
 
             .quick-upload-switch {
                 flex: 1;
                 max-width: 160px;
-                padding: 8px 10px;
-                font-size: 0.8em;
+                padding: 10px 14px;
             }
 
-            .switch-label {
-                font-size: 0.8em;
+            .nav-links {
+                justify-content: center;
+                gap: 12px;
+            }
+
+            .nav-links a {
+                padding: 10px 16px;
+                font-size: 0.9em;
             }
 
             .nav-links {
@@ -1736,10 +1772,10 @@
         .quick-upload-switch {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
-            padding: 10px 14px;
-            border-radius: 16px;
+            padding: 12px 18px;
+            border-radius: 18px;
             background: rgba(74, 144, 226, 0.05);
             border: 1px solid rgba(74, 144, 226, 0.1);
             transition: all 0.3s ease;
@@ -1857,33 +1893,36 @@
 
             /* 优化导航栏布局 */
             .nav-bar {
+                padding: 20px 15px;
+                gap: 15px;
+            }
+
+            .nav-top-row {
                 flex-direction: column;
-                padding: 15px;
-                gap: 12px;
+                gap: 10px;
+                text-align: center;
             }
 
             .nav-bar h1 {
                 font-size: 1.3em;
-                text-align: center;
-                margin-bottom: 5px;
                 justify-content: center;
             }
 
-            .nav-controls {
-                flex-direction: column;
-                gap: 12px;
-                width: 100%;
+            .nav-bottom-row {
+                gap: 20px;
             }
 
             .mobile-switches {
                 justify-content: center;
-                gap: 10px;
+                gap: 15px;
             }
 
             .quick-upload-switch {
-                flex: 1;
-                max-width: 150px;
-                padding: 8px 12px;
+                padding: 10px 14px;
+            }
+
+            .nav-links {
+                gap: 14px;
             }
 
             .nav-links {
@@ -2743,11 +2782,20 @@
 <body>
     <div class="container">
         <div class="nav-bar">
-            <h1>
-                <img src="/image/logo2.png" alt="Logo">
-                内网文件传输
-            </h1>
-            <div class="nav-controls">
+            <div class="nav-top-row">
+                <h1>
+                    <img src="/image/logo2.png" alt="Logo">
+                    内网文件传输
+                </h1>
+                <div class="user-info" id="userInfo" style="display: none;">
+                    <div class="user-avatar" id="userAvatar"></div>
+                    <div class="user-details">
+                        <p class="user-name" id="userName">用户</p>
+                        <p class="user-role" id="userRole">IP: <span id="userIP">-</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-bottom-row">
                 <div class="mobile-switches">
                     <label class="quick-upload-switch">
                         <input type="checkbox" id="quickUploadToggle">
@@ -2765,13 +2813,6 @@
                     <a href="/chat"><i class="fas fa-comments"></i> 聊天室</a>
                     <!-- //// / -->
                     <a href="http://localhost:40098" target="_blank"><i class="fas fa-tasks"></i> 项目管理</a>
-                </div>
-                <div class="user-info" id="userInfo" style="display: none;">
-                    <img class="user-avatar" id="userAvatar" src="/image/avatar/server.png" alt="用户头像">
-                    <div class="user-details">
-                        <p class="user-name" id="userName">用户</p>
-                        <p class="user-role" id="userRole">IP: <span id="userIP">-</span></p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -4887,9 +4928,77 @@
         let ipNameMap = {};
         let ipAvatarMap = {};
 
+        // 可用的emoji头像列表
+        const availableEmojis = [
+            '👨‍💻', '👩‍💻', '🧑‍💼', '👨‍🔬', '👩‍🔬', '🧑‍🎨', '👨‍🎨', '👩‍🎨',
+            '🧑‍🚀', '👨‍🚀', '👩‍🚀', '🧑‍⚕️', '👨‍⚕️', '👩‍⚕️', '🧑‍🏫', '👨‍🏫',
+            '👩‍🏫', '🧑‍💼', '👨‍💼', '👩‍💼', '🧑‍🔧', '👨‍🔧', '👩‍🔧', '🧑‍🌾',
+            '👨‍🌾', '👩‍🌾', '🧑‍🍳', '👨‍🍳', '👩‍🍳', '🧑‍🎓', '👨‍🎓', '👩‍🎓',
+            '🤖', '👽', '🦸‍♂️', '🦸‍♀️', '🦹‍♂️', '🦹‍♀️', '🧙‍♂️', '🧙‍♀️',
+            '🧚‍♂️', '🧚‍♀️', '🧞‍♂️', '🧞‍♀️', '🧝‍♂️', '🧝‍♀️', '🧛‍♂️', '🧛‍♀️',
+            '🎭', '🎨', '🎪', '🎯', '🎲', '🎸', '🎺', '🎷', '🎻', '🎹'
+        ];
+
+        // 为IP随机分配的emoji头像缓存
+        let emojiAvatarCache = {};
+
+        // 智能头像分配函数
+        function getAvatarForIP(ip) {
+            // 1. 首先检查是否有配置的图片头像
+            if (ipAvatarMap[ip]) {
+                return {
+                    type: 'image',
+                    src: ipAvatarMap[ip]
+                };
+            }
+            
+            // 2. 检查是否已经为该IP随机分配过emoji头像
+            if (emojiAvatarCache[ip]) {
+                return {
+                    type: 'emoji',
+                    emoji: emojiAvatarCache[ip]
+                };
+            }
+            
+            // 3. 为新IP随机分配一个emoji头像
+            const randomIndex = Math.floor(Math.random() * availableEmojis.length);
+            const assignedEmoji = availableEmojis[randomIndex];
+            
+            // 4. 缓存分配结果
+            emojiAvatarCache[ip] = assignedEmoji;
+            
+            // 5. 保存到localStorage以便持久化
+            try {
+                localStorage.setItem('emojiAvatarCache', JSON.stringify(emojiAvatarCache));
+            } catch (e) {
+                console.warn('无法保存emoji头像缓存到localStorage:', e);
+            }
+            
+            return {
+                type: 'emoji',
+                emoji: assignedEmoji
+            };
+        }
+
+        // 从localStorage恢复emoji头像缓存
+        function loadEmojiAvatarCache() {
+            try {
+                const cached = localStorage.getItem('emojiAvatarCache');
+                if (cached) {
+                    emojiAvatarCache = JSON.parse(cached);
+                }
+            } catch (e) {
+                console.warn('无法从localStorage加载emoji头像缓存:', e);
+                emojiAvatarCache = {};
+            }
+        }
+
         // 加载用户信息
         async function loadUserInfo() {
             try {
+                // 先加载emoji头像缓存
+                loadEmojiAvatarCache();
+                
                 // 获取当前用户IP和管理员信息
                 const [ipResponse, adminResponse, ipNamesResponse] = await Promise.all([
                     fetch('/get_ip'),
@@ -4909,7 +5018,8 @@
                 ipAvatarMap = ipNamesData.ip_vs_avatar || {};
                 
                 currentUserInfo.name = ipNameMap[currentUserInfo.ip] || currentUserInfo.ip;
-                currentUserInfo.avatar = ipAvatarMap[currentUserInfo.ip] || '/image/avatar/server.png';
+                // 使用智能头像分配
+                currentUserInfo.avatar = getAvatarForIP(currentUserInfo.ip);
                 
                 // 更新UI
                 updateUserInfoDisplay();
@@ -4919,7 +5029,10 @@
                 // 使用默认值
                 currentUserInfo.ip = 'unknown';
                 currentUserInfo.name = '访客';
-                currentUserInfo.avatar = '/image/avatar/server.png';
+                currentUserInfo.avatar = {
+                    type: 'image',
+                    src: '/image/avatar/server.png'
+                };
                 currentUserInfo.isAdmin = false;
                 updateUserInfoDisplay();
             }
@@ -4934,7 +5047,17 @@
             const userIP = document.getElementById('userIP');
             
             if (userInfo && userAvatar && userName && userRole && userIP) {
-                userAvatar.src = currentUserInfo.avatar;
+                // 根据头像类型显示不同的内容
+                if (currentUserInfo.avatar.type === 'image') {
+                    // 显示图片头像
+                    userAvatar.innerHTML = `<img src="${currentUserInfo.avatar.src}" alt="用户头像" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                    userAvatar.classList.remove('emoji-avatar');
+                } else if (currentUserInfo.avatar.type === 'emoji') {
+                    // 显示emoji头像
+                    userAvatar.textContent = currentUserInfo.avatar.emoji;
+                    userAvatar.classList.add('emoji-avatar');
+                }
+                
                 userName.textContent = currentUserInfo.name;
                 userIP.textContent = currentUserInfo.ip;
                 
