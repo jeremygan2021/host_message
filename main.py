@@ -114,7 +114,7 @@ app.add_middleware(
     max_age=3600,  # 预检请求缓存时间
 )
 
-# 创建上传文件存储目录
+# 创建上传文件存储目录 //// /
 #UPLOAD_DIR = "/mnt/server/host_message_files"
 UPLOAD_DIR = "uploads"
 CHAT_HISTORY_DIR = "chat_history"
