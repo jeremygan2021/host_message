@@ -679,59 +679,101 @@ async def upload_file(
     custom_filename: str = Form(None),  # 自定义文件名
     request: Request = None
 ):
-    # 获取用户信息
-    if session_id and session_id in active_users:
-        # 使用登录用户信息
-        user = active_users[session_id]
-        uploader_username = user.username
-        uploader_ip = user.ip
-    else:
-        # 使用简化模式，直接使用IP
-        uploader_ip = get_real_client_ip(request=request)
-        # 优化用户名显示：如果有映射名称就直接使用，否则显示"用户_IP"
-        mapped_name = ip_vs_name.get(str(uploader_ip))
-        if mapped_name:
-            uploader_username = mapped_name + "@" + uploader_ip
-            print(f"uploader_username: {uploader_username}({uploader_ip})")
+    try:
+        # 获取用户信息
+        if session_id and session_id in active_users:
+            # 使用登录用户信息
+            user = active_users[session_id]
+            uploader_username = user.username
+            uploader_ip = user.ip
+            print(f"使用登录用户信息: {uploader_username} ({uploader_ip})")
         else:
-            uploader_username = f"用户ip_{uploader_ip}"
+            # 使用简化模式，直接使用IP
+            uploader_ip = get_real_client_ip(request=request)
+            # 优化用户名显示：如果有映射名称就直接使用，否则显示"用户_IP"
+            mapped_name = ip_vs_name.get(str(uploader_ip))
+            if mapped_name:
+                uploader_username = mapped_name + "@" + uploader_ip
+                print(f"uploader_username: {uploader_username}({uploader_ip})")
+            else:
+                uploader_username = f"用户ip_{uploader_ip}"
+                print(f"使用IP模式: {uploader_username}")
+    except Exception as e:
+        print(f"获取用户信息时出错: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"获取用户信息失败: {str(e)}")
     
-    # 处理文件夹结构上传
-    if relative_path:
-        # 文件夹上传，保持目录结构
-        file_dir = os.path.dirname(relative_path)
-        if target_folder:
-            full_dir = os.path.join(UPLOAD_DIR, target_folder, file_dir) if file_dir else os.path.join(UPLOAD_DIR, target_folder)
-        else:
-            full_dir = os.path.join(UPLOAD_DIR, file_dir) if file_dir else UPLOAD_DIR
-        
-        # 确保目录存在
-        if not os.path.exists(full_dir):
-            os.makedirs(full_dir)
-        
-        # 使用原始文件名，不添加时间戳
-        filename = custom_filename if custom_filename else file.filename
-        file_path = os.path.join(full_dir, filename)
-        relative_file_path = os.path.join(target_folder or "", relative_path) if target_folder else relative_path
-    else:
-        # 普通文件上传
-        if custom_filename:
-            # 使用自定义文件名
-            filename = custom_filename
-        else:
-            # 使用时间戳前缀的原始文件名
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"{timestamp}_{file.filename}"
-        
-        if target_folder:
-            full_dir = os.path.join(UPLOAD_DIR, target_folder)
+    try:
+        # 处理文件夹结构上传
+        if relative_path:
+            print(f"处理文件夹上传: {relative_path}, target_folder: {target_folder}")
+            # 文件夹上传，保持目录结构
+            file_dir = os.path.dirname(relative_path)
+            print(f"file_dir: {file_dir}")
+            
+            # 文件夹上传时，relative_path 已经包含完整的文件夹结构
+            # 检查是否是同名文件夹重复的情况
+            if target_folder and relative_path.startswith(target_folder + "/"):
+                # 用户在文件夹A内上传了同名文件夹A，这通常意味着要替换当前文件夹
+                # 将文件上传到根目录，避免路径重复
+                print(f"检测到同名文件夹上传，将上传到根目录")
+                full_dir = os.path.join(UPLOAD_DIR, file_dir) if file_dir else UPLOAD_DIR
+                relative_file_path = relative_path
+            elif target_folder:
+                # 正常的在文件夹内上传其他文件夹的情况
+                full_dir = os.path.join(UPLOAD_DIR, target_folder, file_dir) if file_dir else os.path.join(UPLOAD_DIR, target_folder)
+                relative_file_path = os.path.join(target_folder, relative_path)
+            else:
+                # 在根目录上传文件夹
+                full_dir = os.path.join(UPLOAD_DIR, file_dir) if file_dir else UPLOAD_DIR
+                relative_file_path = relative_path
+            
+            print(f"最终路径 - full_dir: {full_dir}, relative_file_path: {relative_file_path}")
+            
+            # 确保目录存在
             if not os.path.exists(full_dir):
-                os.makedirs(full_dir)
+                os.makedirs(full_dir, exist_ok=True)
+                print(f"创建目录: {full_dir}")
+            
+            # 使用原始文件名，不添加时间戳
+            # 对于文件夹上传，file.filename 可能包含完整路径，我们只需要文件名部分
+            if custom_filename:
+                filename = custom_filename
+            else:
+                filename = os.path.basename(relative_path)  # 从 relative_path 中提取文件名
+            print(f"file.filename: {file.filename}")
+            print(f"使用的filename: {filename}")
             file_path = os.path.join(full_dir, filename)
-            relative_file_path = os.path.join(target_folder, filename)
+            print(f"计算出的 file_path: {file_path}")
         else:
-            file_path = os.path.join(UPLOAD_DIR, filename)
-            relative_file_path = filename
+            print(f"处理普通文件上传: {file.filename}")
+            # 普通文件上传
+            if custom_filename:
+                # 使用自定义文件名
+                filename = custom_filename
+            else:
+                # 使用时间戳前缀的原始文件名
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"{timestamp}_{file.filename}"
+            
+            if target_folder:
+                full_dir = os.path.join(UPLOAD_DIR, target_folder)
+                if not os.path.exists(full_dir):
+                    os.makedirs(full_dir, exist_ok=True)
+                    print(f"创建目标目录: {full_dir}")
+                file_path = os.path.join(full_dir, filename)
+                relative_file_path = os.path.join(target_folder, filename)
+            else:
+                file_path = os.path.join(UPLOAD_DIR, filename)
+                relative_file_path = filename
+        
+        print(f"文件将保存到: {file_path}")
+    except Exception as e:
+        print(f"处理文件路径时出错: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"处理文件路径失败: {str(e)}")
     
     # 进一步优化大文件传输 - 局域网高速传输配置
     # 将chunk_size增加到16MB，最大化局域网传输效率
@@ -739,6 +781,13 @@ async def upload_file(
     total_size = 0
     
     try:
+        print(f"开始写入文件到: {file_path}")
+        # 验证文件路径的父目录是否存在
+        file_parent_dir = os.path.dirname(file_path)
+        if not os.path.exists(file_parent_dir):
+            print(f"父目录不存在，创建: {file_parent_dir}")
+            os.makedirs(file_parent_dir, exist_ok=True)
+        
         # 高性能异步文件写入，专为局域网大文件传输优化
         async with aiofiles.open(file_path, "wb", buffering=chunk_size) as f:
             # 移除所有延迟和控制权释放，让传输尽可能快
@@ -746,11 +795,15 @@ async def upload_file(
                 await f.write(chunk)
                 total_size += len(chunk)
                 # 完全移除延迟 - 局域网环境下无需限速
+        print(f"文件写入成功: {file_path}, 大小: {total_size}")
     except Exception as e:
+        print(f"文件写入失败: {str(e)}")
+        import traceback
+        traceback.print_exc()
         # 清理失败的文件
         if os.path.exists(file_path):
             os.remove(file_path)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"文件写入失败: {str(e)}")
     
     # 异步写入元数据
     metadata = {
