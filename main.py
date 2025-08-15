@@ -956,7 +956,7 @@ async def move_file(
 
 @app.delete("/folders/{folder_path:path}")
 async def delete_folder(folder_path: str, request: Request = None):
-    """删除文件夹（必须为空）"""
+    """删除文件夹（包括其中的所有文件和子文件夹）"""
     try:
         full_path = os.path.join(UPLOAD_DIR, folder_path)
         
@@ -966,16 +966,11 @@ async def delete_folder(folder_path: str, request: Request = None):
         if not os.path.isdir(full_path):
             raise HTTPException(status_code=400, detail="指定路径不是文件夹")
         
-        # 检查文件夹是否为空（除了.folder_meta文件）
-        contents = [item for item in os.listdir(full_path) if item != ".folder_meta"]
-        if contents:
-            raise HTTPException(status_code=400, detail=f"文件夹不为空，包含 {len(contents)} 个项目")
-        
-        # 删除文件夹
+        # 删除文件夹及其所有内容
         import shutil
         shutil.rmtree(full_path)
         
-        return {"message": "文件夹删除成功", "folder_path": folder_path}
+        return {"message": "文件夹及其所有内容删除成功", "folder_path": folder_path}
         
     except HTTPException:
         raise

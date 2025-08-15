@@ -4362,7 +4362,7 @@
 
         // 删除文件夹
         async function deleteFolder(folderPath) {
-            if (!confirm('确定要删除这个文件夹吗？文件夹必须为空才能删除。')) {
+            if (!confirm('确定要删除这个文件夹吗？文件夹内的所有文件和子文件夹都将被永久删除。')) {
                 return;
             }
             

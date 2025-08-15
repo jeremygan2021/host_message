@@ -19,7 +19,6 @@
         "6.6.6.69": "阿甘手机",
         "6.6.6.89": "阿甘2"
     },
-},
     "ip_vs_avatar": {
         "127.0.0.1": "/image/avatar/server.png",
         "6.6.6.88": "/image/avatar/ag.png",
