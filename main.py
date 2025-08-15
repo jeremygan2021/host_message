@@ -1009,8 +1009,13 @@ async def move_file(
 
 @app.delete("/folders/{folder_path:path}")
 async def delete_folder(folder_path: str, request: Request = None):
-    """删除文件夹（包括其中的所有文件和子文件夹）"""
+    """删除文件夹（包括其中的所有文件和子文件夹）- 仅管理员可操作"""
     try:
+        # 验证管理员权限
+        client_ip = get_real_client_ip(request=request)
+        if client_ip != admin_ip:
+            raise HTTPException(status_code=403, detail="权限不足，只有管理员才能删除文件夹")
+        
         full_path = os.path.join(UPLOAD_DIR, folder_path)
         
         if not os.path.exists(full_path):
@@ -1315,9 +1320,14 @@ async def download_file(file_path: str):
         raise HTTPException(status_code=500, detail=f"下载失败: {str(e)}")
 
 @app.delete("/files/{file_path:path}")
-async def delete_file(file_path: str):
-    """删除文件，支持文件夹路径"""
+async def delete_file(file_path: str, request: Request = None):
+    """删除文件，支持文件夹路径 - 仅管理员可操作"""
     try:
+        # 验证管理员权限
+        client_ip = get_real_client_ip(request=request)
+        if client_ip != admin_ip:
+            raise HTTPException(status_code=403, detail="权限不足，只有管理员才能删除文件")
+        
         full_file_path = os.path.join(UPLOAD_DIR, file_path)
         metadata_path = full_file_path + ".meta"
         
@@ -1332,6 +1342,8 @@ async def delete_file(file_path: str):
         if os.path.exists(metadata_path):
             os.remove(metadata_path)
         return {"message": "文件删除成功"}
+    except HTTPException:
+        raise
     except Exception as e:
         return {"message": f"删除失败: {str(e)}"}
 

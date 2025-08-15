@@ -40,41 +40,258 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            background: var(--card-bg);
+            padding: 18px 30px;
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(245,247,250,0.8) 100%);
             border-radius: var(--border-radius);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+            flex-wrap: nowrap;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-bar {
+                padding: 16px 20px;
+                gap: 15px;
+            }
+            
+            .nav-controls {
+                gap: 18px;
+            }
+            
+            .mobile-switches {
+                gap: 12px;
+            }
+            
+            .quick-upload-switch {
+                padding: 8px 12px;
+            }
+            
+            .switch-label {
+                font-size: 0.8em;
+            }
+        }
+
+        .nav-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), #00d2ff);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* 添加导航栏悬浮效果 */
+        .nav-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .nav-bar:hover::before {
+            height: 4px;
+            animation-duration: 1.5s;
+        }
+
+        /* 导航栏分隔线 */
+        .nav-controls::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 1px;
+            height: 30px;
+            background: linear-gradient(to bottom, transparent, rgba(74, 144, 226, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-bar:hover .nav-controls::before {
+            opacity: 1;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(74, 144, 226, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .user-info:hover {
+            background: rgba(74, 144, 226, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            object-fit: cover;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .user-info:hover .user-avatar {
+            transform: scale(1.05);
+            border-color: var(--secondary-color);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 0.75em;
+            color: #666;
+            margin: 0;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.65em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(238, 90, 36, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .nav-bar h1 {
             color: var(--primary-color);
             font-size: 1.8em;
             margin: 0;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: 0;
+        }
+
+        .nav-bar h1 img {
+            height: 36px !important;
+            width: auto !important;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .nav-bar h1:hover img {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: nowrap;
+            flex-shrink: 1;
+            min-width: 0;
+        }
+
+        .mobile-switches {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .nav-links a {
             color: var(--primary-color);
             text-decoration: none;
-            margin-left: 20px;
             transition: all var(--transition-speed);
-            padding: 8px 15px;
-            border-radius: 20px;
-            background: rgba(74, 144, 226, 0.1);
+            padding: 10px 16px;
+            border-radius: 25px;
+            background: rgba(74, 144, 226, 0.08);
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 0.9em;
+            border: 1px solid rgba(74, 144, 226, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
         }
 
         .nav-links a:hover {
             color: white;
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+            border-color: var(--primary-color);
         }
 
         .nav-links a i {
             font-size: 1.1em;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links a:hover i {
+            transform: scale(1.1);
         }
 
         .upload-section {
@@ -434,16 +651,55 @@
 
             /* 导航栏优化 */
             .nav-bar {
-                padding: 15px;
+                padding: 16px 15px;
                 flex-direction: column;
-                gap: 15px;
+                gap: 16px;
+                margin-bottom: 20px;
+                min-height: auto;
             }
 
             .nav-bar h1 {
                 font-size: 1.4em;
                 width: 100%;
-                margin-bottom: 10px;
+                margin-bottom: 8px;
                 text-align: center;
+                justify-content: center;
+                order: 1;
+            }
+
+            .nav-bar h1 img {
+                height: 28px !important;
+            }
+
+            .nav-controls {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+                position: relative;
+                order: 2;
+            }
+
+            .nav-controls::before {
+                display: none;
+            }
+
+            /* 移动端开关组合 */
+            .mobile-switches {
+                display: flex;
+                gap: 8px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .quick-upload-switch {
+                flex: 1;
+                max-width: 160px;
+                padding: 8px 10px;
+                font-size: 0.8em;
+            }
+
+            .switch-label {
+                font-size: 0.8em;
             }
 
             .nav-links {
@@ -462,6 +718,24 @@
                 min-width: 100px;
                 text-align: center;
                 justify-content: center;
+            }
+
+            .user-info {
+                justify-content: center;
+                margin: 0;
+                padding: 10px;
+                background: rgba(74, 144, 226, 0.1);
+                border-radius: 12px;
+            }
+
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+            }
+
+            .user-details {
+                align-items: center;
+                text-align: center;
             }
 
             /* 上传区域优化 */
@@ -1462,23 +1736,41 @@
         .quick-upload-switch {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             cursor: pointer;
+            padding: 10px 14px;
+            border-radius: 16px;
+            background: rgba(74, 144, 226, 0.05);
+            border: 1px solid rgba(74, 144, 226, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .quick-upload-switch:hover {
+            background: rgba(74, 144, 226, 0.08);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.1);
         }
 
         .switch-label {
-            font-size: 0.9em;
-            color: #666;
+            font-size: 0.85em;
+            color: #555;
+            font-weight: 500;
+            line-height: 1.2;
+            user-select: none;
         }
 
         .switch-slider {
             position: relative;
             display: inline-block;
-            width: 40px;
-            height: 20px;
-            background: #ccc;
-            border-radius: 20px;
+            width: 44px;
+            height: 22px;
+            background: linear-gradient(135deg, #e0e0e0, #f0f0f0);
+            border-radius: 22px;
             transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .switch-slider::after {
@@ -1487,11 +1779,11 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: white;
-            top: 1px;
-            left: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .quick-upload-switch input {
@@ -1499,11 +1791,19 @@
         }
 
         .quick-upload-switch input:checked + .switch-label + .switch-slider {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 10px rgba(74, 144, 226, 0.3);
         }
 
         .quick-upload-switch input:checked + .switch-label + .switch-slider::after {
-            transform: translateX(20px);
+            transform: translateX(22px);
+            background: linear-gradient(135deg, #fff, #e3f2fd);
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2), 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .quick-upload-switch input:checked + .switch-label {
+            color: var(--primary-color);
+            font-weight: 600;
         }
 
         /* 移动端适配 */
@@ -1559,13 +1859,31 @@
             .nav-bar {
                 flex-direction: column;
                 padding: 15px;
-                gap: 10px;
+                gap: 12px;
             }
 
             .nav-bar h1 {
-                font-size: 1.4em;
+                font-size: 1.3em;
                 text-align: center;
                 margin-bottom: 5px;
+                justify-content: center;
+            }
+
+            .nav-controls {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .mobile-switches {
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .quick-upload-switch {
+                flex: 1;
+                max-width: 150px;
+                padding: 8px 12px;
             }
 
             .nav-links {
@@ -1582,6 +1900,14 @@
                 background: rgba(74, 144, 226, 0.1);
                 border-radius: 20px;
                 font-size: 0.9em;
+            }
+
+            .user-info {
+                justify-content: center;
+                padding: 8px 12px;
+                background: rgba(74, 144, 226, 0.1);
+                border-radius: 12px;
+                margin: 0;
             }
 
             /* 添加快速上传状态提示 */
@@ -1676,6 +2002,19 @@
             .nav-links a {
                 padding: 6px 12px;
                 font-size: 0.85em;
+            }
+
+            .user-info {
+                padding: 6px 10px;
+            }
+
+            .user-avatar {
+                width: 30px;
+                height: 30px;
+            }
+
+            .user-name, .user-role {
+                font-size: 0.8em;
             }
         }
 
@@ -2404,23 +2743,35 @@
 <body>
     <div class="container">
         <div class="nav-bar">
-            <h1><img src="/image/logo2.png" alt="Logo" style="height: 32px; width: auto; margin-right: 10px; vertical-align: middle;"> 内网文件传输</h1>
+            <h1>
+                <img src="/image/logo2.png" alt="Logo">
+                内网文件传输
+            </h1>
             <div class="nav-controls">
-                <label class="quick-upload-switch">
-                    <input type="checkbox" id="quickUploadToggle">
-                    <span class="switch-label">快速上传</span>
-                    <span class="switch-slider"></span>
-                </label>
-                <label class="quick-upload-switch">
-                    <input type="checkbox" id="skipValidationToggle">
-                    <span class="switch-label">跳过文件名检查</span>
-                    <span class="switch-slider"></span>
-                </label>
+                <div class="mobile-switches">
+                    <label class="quick-upload-switch">
+                        <input type="checkbox" id="quickUploadToggle">
+                        <span class="switch-label">快速上传</span>
+                        <span class="switch-slider"></span>
+                    </label>
+                    <label class="quick-upload-switch">
+                        <input type="checkbox" id="skipValidationToggle">
+                        <span class="switch-label">跳过文件名检查</span>
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
                 <div class="nav-links">
                     <a href="/"><i class="fas fa-home"></i> 首页</a>
                     <a href="/chat"><i class="fas fa-comments"></i> 聊天室</a>
                     <!-- //// / -->
                     <a href="http://localhost:40098" target="_blank"><i class="fas fa-tasks"></i> 项目管理</a>
+                </div>
+                <div class="user-info" id="userInfo" style="display: none;">
+                    <img class="user-avatar" id="userAvatar" src="/image/avatar/server.png" alt="用户头像">
+                    <div class="user-details">
+                        <p class="user-name" id="userName">用户</p>
+                        <p class="user-role" id="userRole">IP: <span id="userIP">-</span></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -4072,9 +4423,9 @@
                                     <button class="rename-btn" onclick="showRenameFolderDialog('${file.name}', '${currentFolder}')">
                                         <i class="fas fa-edit"></i> 重命名
                                     </button>
-                                    <button class="delete-btn" onclick="deleteFolder('${file.path}')">
+                                    ${currentUserInfo.isAdmin ? `<button class="delete-btn" onclick="deleteFolder('${file.path}')">
                                         <i class="fas fa-trash"></i> 删除
-                                    </button>
+                                    </button>` : ''}
                                 </div>
                             `;
                         } else {
@@ -4091,7 +4442,7 @@
                                     <div class="file-content">
                                         <div class="file-name">${file.name}</div>
                                         <div class="file-uploader">
-                                            <i class="fas fa-user"></i> 上传者: ${file.uploader_username || file.uploader_ip}
+                                            <i class="fas fa-user"></i> 上传者: ${formatUploaderInfo(file.uploader_username, file.uploader_ip)}
                                         </div>
                                         ${file.comment ? `
                                             <div class="file-comment">
@@ -4120,9 +4471,9 @@
                                     <button class="move-btn" onclick="showMoveFileDialog('${file.name}', '${currentFolder}')">
                                         <i class="fas fa-cut"></i> 移动
                                     </button>
-                                    <button class="delete-btn" onclick="deleteFile('${file.path}')">
+                                    ${currentUserInfo.isAdmin ? `<button class="delete-btn" onclick="deleteFile('${file.path}')">
                                         <i class="fas fa-trash"></i> 删除
-                                    </button>
+                                    </button>` : ''}
                                 </div>
                             `;
                             
@@ -4362,6 +4713,12 @@
 
         // 删除文件夹
         async function deleteFolder(folderPath) {
+            // 检查管理员权限
+            if (!currentUserInfo.isAdmin) {
+                showToast('权限不足，只有管理员才能删除文件夹');
+                return;
+            }
+            
             if (!confirm('确定要删除这个文件夹吗？文件夹内的所有文件和子文件夹都将被永久删除。')) {
                 return;
             }
@@ -4370,6 +4727,12 @@
                 const response = await fetch(`/folders/${folderPath}`, {
                     method: 'DELETE'
                 });
+                
+                if (response.status === 403) {
+                    showToast('权限不足，只有管理员才能删除文件夹');
+                    return;
+                }
+                
                 const result = await response.json();
                 showToast(result.message);
                 loadFiles(); // 重新加载文件列表
@@ -4484,7 +4847,13 @@
 
         // 添加删除文件的函数
         async function deleteFile(filename) {
-            if (!confirm('确定要删除个文件吗？')) {
+            // 检查管理员权限
+            if (!currentUserInfo.isAdmin) {
+                showToast('权限不足，只有管理员才能删除文件');
+                return;
+            }
+            
+            if (!confirm('确定要删除这个文件吗？')) {
                 return;
             }
             
@@ -4492,12 +4861,107 @@
                 const response = await fetch(`/files/${filename}`, {
                     method: 'DELETE'
                 });
+                
+                if (response.status === 403) {
+                    showToast('权限不足，只有管理员才能删除文件');
+                    return;
+                }
+                
                 const result = await response.json();
                 showToast(result.message);
                 loadFiles(); // 重新加载文件列表
             } catch (error) {
                 showToast('删除失败：' + error.message);
             }
+        }
+
+        // 全局用户信息变量
+        let currentUserInfo = {
+            ip: '',
+            name: '',
+            avatar: '',
+            isAdmin: false
+        };
+
+        // 全局IP名称映射
+        let ipNameMap = {};
+        let ipAvatarMap = {};
+
+        // 加载用户信息
+        async function loadUserInfo() {
+            try {
+                // 获取当前用户IP和管理员信息
+                const [ipResponse, adminResponse, ipNamesResponse] = await Promise.all([
+                    fetch('/get_ip'),
+                    fetch('/admin/info'),
+                    fetch('/get_ip_names')
+                ]);
+                
+                const ipData = await ipResponse.json();
+                const adminData = await adminResponse.json();
+                const ipNamesData = await ipNamesResponse.json();
+                
+                currentUserInfo.ip = ipData.ip;
+                currentUserInfo.isAdmin = adminData.is_admin;
+                
+                // 设置用户名称和头像
+                ipNameMap = ipNamesData.ip_vs_name || {};
+                ipAvatarMap = ipNamesData.ip_vs_avatar || {};
+                
+                currentUserInfo.name = ipNameMap[currentUserInfo.ip] || currentUserInfo.ip;
+                currentUserInfo.avatar = ipAvatarMap[currentUserInfo.ip] || '/image/avatar/server.png';
+                
+                // 更新UI
+                updateUserInfoDisplay();
+                
+            } catch (error) {
+                console.error('加载用户信息失败:', error);
+                // 使用默认值
+                currentUserInfo.ip = 'unknown';
+                currentUserInfo.name = '访客';
+                currentUserInfo.avatar = '/image/avatar/server.png';
+                currentUserInfo.isAdmin = false;
+                updateUserInfoDisplay();
+            }
+        }
+
+        // 更新用户信息显示
+        function updateUserInfoDisplay() {
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            const userIP = document.getElementById('userIP');
+            
+            if (userInfo && userAvatar && userName && userRole && userIP) {
+                userAvatar.src = currentUserInfo.avatar;
+                userName.textContent = currentUserInfo.name;
+                userIP.textContent = currentUserInfo.ip;
+                
+                if (currentUserInfo.isAdmin) {
+                    userRole.innerHTML = `<span class="admin-badge">管理员</span> IP: <span id="userIP">${currentUserInfo.ip}</span>`;
+                } else {
+                    userRole.innerHTML = `IP: <span id="userIP">${currentUserInfo.ip}</span>`;
+                }
+                
+                userInfo.style.display = 'flex';
+            }
+        }
+
+        // 格式化上传者信息
+        function formatUploaderInfo(uploaderUsername, uploaderIp) {
+            // 如果uploader_username包含@符号，说明已经是格式化过的名称
+            if (uploaderUsername && uploaderUsername.includes('@')) {
+                return uploaderUsername;
+            }
+            
+            // 否则尝试从IP映射中获取名称
+            if (uploaderIp && ipNameMap[uploaderIp]) {
+                return `${ipNameMap[uploaderIp]}@${uploaderIp}`;
+            }
+            
+            // fallback：使用原始信息
+            return uploaderUsername || uploaderIp || '未知用户';
         }
 
         // 初始加载文件列表（在页面完全加载后进行）
@@ -4591,8 +5055,10 @@
             // 初始化返回按钮状态
             updateBackButton();
             
-            // 初始加载文件列表
-            loadFiles();
+            // 先加载用户信息，然后加载文件列表
+            loadUserInfo().then(() => {
+                loadFiles();
+            });
             
             // 添加长按提示支持
             const quickUploadSwitch = document.querySelector('.quick-upload-switch');
