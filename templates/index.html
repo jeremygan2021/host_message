@@ -2411,6 +2411,11 @@
                     <span class="switch-label">快速上传</span>
                     <span class="switch-slider"></span>
                 </label>
+                <label class="quick-upload-switch">
+                    <input type="checkbox" id="skipValidationToggle">
+                    <span class="switch-label">跳过文件名检查</span>
+                    <span class="switch-slider"></span>
+                </label>
                 <div class="nav-links">
                     <a href="/"><i class="fas fa-home"></i> 首页</a>
                     <a href="/chat"><i class="fas fa-comments"></i> 聊天室</a>
@@ -3453,11 +3458,12 @@
             const quickUpload = document.getElementById('quickUploadToggle').checked;
             
             if (quickUpload) {
-                // 快速上传模式
+                // 快速上传模式 - 直接上传，不做文件名验证
                 initializeProgressContainer();
                 Array.from(files).forEach(file => {
                     uploadSingleFile(file, true);
                 });
+                showToast(`快速上传模式：开始上传 ${files.length} 个文件`);
             } else {
                 // 预览模式
                 pendingFiles = [...pendingFiles, ...Array.from(files)];
@@ -3522,12 +3528,45 @@
             }
         }
 
-        // 验证文件名
+        // 自动修复文件名
+        function autoFixFilename(filename) {
+            // 替换有害字符为安全字符
+            let fixed = filename
+                .replace(/[\/\\]/g, '-') // 路径分隔符替换为连字符
+                .replace(/[|]/g, '_')    // 管道符替换为下划线
+                .trim();
+            
+            // 如果文件名太长，截断但保留扩展名
+            if (fixed.length > 300) {
+                const lastDotIndex = fixed.lastIndexOf('.');
+                if (lastDotIndex > 0) {
+                    const extension = fixed.substring(lastDotIndex);
+                    const nameWithoutExt = fixed.substring(0, lastDotIndex);
+                    fixed = nameWithoutExt.substring(0, 300 - extension.length) + extension;
+                } else {
+                    fixed = fixed.substring(0, 300);
+                }
+            }
+            
+            return fixed;
+        }
+
+        // 验证文件名 - 宽松版本，自动修复
         function validateFilename(input) {
-            const filename = input.value.trim();
-            const invalidChars = /[\/\\:*?"<>|]/;
-            const isEmpty = filename.length === 0;
-            const isTooLong = filename.length > 255;
+            // 检查是否跳过验证
+            const skipValidation = document.getElementById('skipValidationToggle').checked;
+            if (skipValidation) {
+                // 移除任何错误提示
+                const existingError = input.parentNode.querySelector('.filename-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+                input.classList.remove('invalid');
+                return true; // 跳过所有验证
+            }
+            
+            const originalFilename = input.value.trim();
+            const fixedFilename = autoFixFilename(originalFilename);
             
             // 移除之前的错误提示
             const existingError = input.parentNode.querySelector('.filename-error');
@@ -3538,27 +3577,37 @@
             // 重置样式
             input.classList.remove('invalid');
             
-            if (isEmpty) {
+            if (originalFilename.length === 0) {
                 showFilenameError(input, '文件名不能为空');
                 return false;
             }
             
-            if (invalidChars.test(filename)) {
-                showFilenameError(input, '文件名不能包含以下字符：/ \\ : * ? " < > |');
-                return false;
-            }
-            
-            if (isTooLong) {
-                showFilenameError(input, '文件名不能超过255个字符');
-                return false;
-            }
-            
-            if (filename.startsWith('.') || filename.endsWith('.')) {
-                showFilenameError(input, '文件名不能以点号开头或结尾');
-                return false;
+            // 如果文件名被自动修复了，更新输入框并显示提示
+            if (fixedFilename !== originalFilename) {
+                input.value = fixedFilename;
+                showFilenameInfo(input, '文件名已自动修正');
+                return true;
             }
             
             return true;
+        }
+
+        // 显示文件名信息提示
+        function showFilenameInfo(input, message) {
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'filename-info';
+            infoDiv.textContent = message;
+            infoDiv.style.color = '#4caf50';
+            infoDiv.style.fontSize = '0.75em';
+            infoDiv.style.marginTop = '4px';
+            input.parentNode.appendChild(infoDiv);
+            
+            // 3秒后自动移除提示
+            setTimeout(() => {
+                if (infoDiv.parentNode) {
+                    infoDiv.remove();
+                }
+            }, 3000);
         }
 
         // 显示文件名错误
@@ -3752,7 +3801,7 @@
             
             // 如果有无效文件名，停止上传
             if (hasInvalidFilenames) {
-                showToast('请修正无效的文件名后再上传');
+                showToast('发现无效文件名，请检查红色标记的文件名');
                 // 恢复上传按钮
                 if (uploadBtn) {
                     uploadBtn.disabled = false;
@@ -4466,6 +4515,25 @@
             showUploadStatus(isQuickUpload ? '已开启快速上传' : '已关闭快速上传');
         });
 
+        // 添加跳过验证开关
+        document.getElementById('skipValidationToggle').addEventListener('change', function(e) {
+            const skipValidation = e.target.checked;
+            
+            // 保存设置
+            localStorage.setItem('skipValidation', skipValidation);
+            
+            // 显示状态提示
+            showUploadStatus(skipValidation ? '已跳过文件名检查' : '已开启文件名检查');
+            
+            // 如果开启跳过验证，清除所有现有的错误提示
+            if (skipValidation) {
+                document.querySelectorAll('.filename-error').forEach(error => error.remove());
+                document.querySelectorAll('.preview-file-name-input').forEach(input => {
+                    input.classList.remove('invalid');
+                });
+            }
+        });
+
         // 添加状态提示函数
         function showUploadStatus(message) {
             let status = document.querySelector('.upload-status');
@@ -4491,6 +4559,13 @@
                 const isQuickUpload = quickUpload === 'true';
                 document.getElementById('quickUploadToggle').checked = isQuickUpload;
                 document.querySelector('.upload-section').classList.toggle('quick-upload-mode', isQuickUpload);
+            }
+
+            // 恢复跳过验证设置
+            const skipValidation = localStorage.getItem('skipValidation');
+            if (skipValidation !== null) {
+                const isSkipValidation = skipValidation === 'true';
+                document.getElementById('skipValidationToggle').checked = isSkipValidation;
             }
             
             // 恢复布局设置

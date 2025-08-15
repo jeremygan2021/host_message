@@ -846,13 +846,17 @@ async def create_folder(
 ):
     """创建新文件夹"""
     try:
-        # 验证文件夹名称
+        # 验证文件夹名称 - 宽松版本
         if not folder_name or not folder_name.strip():
             raise HTTPException(status_code=400, detail="文件夹名称不能为空")
         
         folder_name = folder_name.strip()
-        if any(char in folder_name for char in ['/', '\\', ':', '*', '?', '"', '<', '>', '|']):
-            raise HTTPException(status_code=400, detail="文件夹名称包含非法字符")
+        # 自动修复文件夹名称，只禁止路径分隔符
+        folder_name = folder_name.replace('/', '-').replace('\\', '-').replace('|', '_')
+        
+        # 只检查真正有害的字符
+        if any(char in folder_name for char in ['/']):
+            raise HTTPException(status_code=400, detail="文件夹名称包含不安全字符")
         
         # 构建完整路径
         if parent_folder:
@@ -987,13 +991,17 @@ async def rename_file(
 ):
     """重命名文件"""
     try:
-        # 验证新文件名
+        # 验证新文件名 - 宽松版本
         if not new_name or not new_name.strip():
             raise HTTPException(status_code=400, detail="新文件名不能为空")
         
         new_name = new_name.strip()
-        if any(char in new_name for char in ['/', '\\', ':', '*', '?', '"', '<', '>', '|']):
-            raise HTTPException(status_code=400, detail="文件名包含非法字符")
+        # 自动修复文件名，替换有害字符
+        new_name = new_name.replace('/', '-').replace('\\', '-').replace('|', '_')
+        
+        # 只检查真正有害的字符
+        if '/' in new_name or '\\' in new_name:
+            raise HTTPException(status_code=400, detail="文件名包含不安全字符")
         
         # 构建文件路径
         if folder_path:
@@ -1058,8 +1066,12 @@ async def rename_folder(
             raise HTTPException(status_code=400, detail="新文件夹名不能为空")
         
         new_name = new_name.strip()
-        if any(char in new_name for char in ['/', '\\', ':', '*', '?', '"', '<', '>', '|']):
-            raise HTTPException(status_code=400, detail="文件夹名包含非法字符")
+        # 自动修复文件夹名称，替换有害字符
+        new_name = new_name.replace('/', '-').replace('\\', '-').replace('|', '_')
+        
+        # 只检查真正有害的字符
+        if '/' in new_name or '\\' in new_name:
+            raise HTTPException(status_code=400, detail="文件夹名包含不安全字符")
         
         # 构建文件夹路径
         if parent_folder:
