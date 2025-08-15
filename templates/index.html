@@ -681,6 +681,455 @@
             font-size: 20px;
             color: var(--primary-color);
             box-shadow: 0 2px 8px rgba(74, 144, 226, 0.1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* 文件类型图标样式 */
+        .file-icon.image {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.2) 100%);
+            color: #4caf50;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
+        }
+
+        .file-icon.video {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.2) 100%);
+            color: #f44336;
+            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.1);
+        }
+
+        .file-icon.audio {
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.2) 100%);
+            color: #9c27b0;
+            box-shadow: 0 2px 8px rgba(156, 39, 176, 0.1);
+        }
+
+        .file-icon.pdf {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.2) 100%);
+            color: #f44336;
+            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.1);
+        }
+
+        .file-icon.archive {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 152, 0, 0.2) 100%);
+            color: #ff9800;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.1);
+        }
+
+        .file-icon.code {
+            background: linear-gradient(135deg, rgba(96, 125, 139, 0.1) 0%, rgba(96, 125, 139, 0.2) 100%);
+            color: #607d8b;
+            box-shadow: 0 2px 8px rgba(96, 125, 139, 0.1);
+        }
+
+        .file-icon.document {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.2) 100%);
+            color: #2196f3;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+        }
+
+        /* 文件预览缩略图 */
+        .file-thumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .file-thumbnail.loaded {
+            opacity: 1;
+        }
+
+        .file-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .file-icon.has-preview:hover .file-thumbnail {
+            opacity: 0.8;
+        }
+
+        /* 播放按钮覆盖层 */
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .file-icon:hover .play-overlay {
+            opacity: 1;
+        }
+
+        /* 媒体预览模态框 */
+        .media-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .media-preview-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .media-preview-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .media-preview-content img,
+        .media-preview-content video {
+            max-width: 100%;
+            max-height: 90vh;
+            display: block;
+        }
+
+        .media-preview-content audio {
+            width: 450px;
+            min-width: 350px;
+            height: auto;
+            background: #f8f9fa;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .audio-preview-container {
+            padding: 30px;
+            background: #fff;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 400px;
+            max-width: 500px;
+        }
+
+        .audio-preview-icon {
+            font-size: 48px;
+            color: #9c27b0;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.2) 100%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .audio-preview-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .audio-preview-details {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .audio-preview-player {
+            width: 100%;
+            margin-top: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            outline: none;
+            height: 54px;
+            display: block !important;
+        }
+
+        /* 自定义音频控件样式 */
+        .audio-preview-player::-webkit-media-controls-panel {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .audio-preview-player::-webkit-media-controls-play-button {
+            background-color: #9c27b0;
+            border-radius: 50%;
+            margin: 0 8px;
+        }
+
+        .audio-preview-player::-webkit-media-controls-timeline {
+            background-color: rgba(156, 39, 176, 0.2);
+            border-radius: 2px;
+            margin: 0 8px;
+        }
+
+        .audio-preview-player::-webkit-media-controls-current-time-display,
+        .audio-preview-player::-webkit-media-controls-time-remaining-display {
+            color: #9c27b0;
+            font-size: 12px;
+        }
+
+        .audio-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #9c27b0;
+            font-size: 14px;
+        }
+
+        .audio-loading i {
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .audio-error {
+            color: #f44336;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .audio-error i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* 自定义音频控制按钮 */
+        .audio-custom-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .audio-play-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(156, 39, 176, 0.3);
+        }
+
+        .audio-play-btn:hover {
+            background: linear-gradient(135deg, #7b1fa2 0%, #4a148c 100%);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.4);
+        }
+
+        .audio-time-display {
+            font-family: monospace;
+            font-size: 14px;
+            color: #666;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .audio-volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .audio-volume-slider {
+            width: 80px;
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .audio-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #9c27b0;
+            cursor: pointer;
+        }
+
+        .media-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2001;
+            transition: all 0.3s ease;
+        }
+
+        .media-close-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .media-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .media-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .media-info p {
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        /* 移动端媒体预览优化 */
+        @media (max-width: 768px) {
+            .media-preview-content {
+                max-width: 95vw;
+                max-height: 95vh;
+                margin: 20px;
+            }
+
+            .media-preview-content audio {
+                width: 100%;
+                min-width: 280px;
+                padding: 15px;
+            }
+
+            .audio-preview-container {
+                padding: 20px;
+                min-width: 300px;
+                max-width: 90vw;
+                margin: 10px;
+            }
+
+            .audio-preview-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 36px;
+                margin-bottom: 15px;
+            }
+
+            .audio-preview-title {
+                font-size: 14px;
+                margin-bottom: 6px;
+            }
+
+            .audio-preview-details {
+                font-size: 12px;
+                margin-bottom: 15px;
+            }
+
+            .audio-preview-player {
+                margin-top: 15px;
+            }
+
+            .audio-custom-controls {
+                gap: 10px;
+                padding: 12px;
+                flex-wrap: wrap;
+            }
+
+            .audio-play-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .audio-time-display {
+                font-size: 12px;
+                min-width: 80px;
+            }
+
+            .audio-volume-slider {
+                width: 60px;
+            }
+
+            .media-close-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+                top: 5px;
+                right: 5px;
+            }
+
+            .media-info {
+                padding: 15px;
+                font-size: 13px;
+            }
+
+            .media-info h3 {
+                font-size: 14px;
+            }
+
+            .file-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .play-overlay {
+                width: 20px;
+                height: 20px;
+                font-size: 8px;
+            }
         }
 
         /* 移动端优化 */
@@ -795,6 +1244,43 @@
             color: var(--primary-color);
             margin-right: 15px;
             flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* 预览文件图标类型样式 */
+        .preview-file-icon.image {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .preview-file-icon.video {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .preview-file-icon.audio {
+            background: rgba(156, 39, 176, 0.1);
+            color: #9c27b0;
+        }
+
+        .preview-file-icon.pdf {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .preview-file-icon.archive {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .preview-file-icon.code {
+            background: rgba(96, 125, 139, 0.1);
+            color: #607d8b;
+        }
+
+        .preview-file-icon.document {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
         }
 
         .preview-file-info {
@@ -1741,6 +2227,48 @@
             flex-shrink: 0;
         }
 
+        /* 紧凑模式下的文件类型样式 */
+        .file-card.compact .file-icon.image {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.2) 100%);
+            color: #4caf50;
+        }
+
+        .file-card.compact .file-icon.video {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.2) 100%);
+            color: #f44336;
+        }
+
+        .file-card.compact .file-icon.audio {
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.2) 100%);
+            color: #9c27b0;
+        }
+
+        .file-card.compact .file-icon.pdf {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.2) 100%);
+            color: #f44336;
+        }
+
+        .file-card.compact .file-icon.archive {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 152, 0, 0.2) 100%);
+            color: #ff9800;
+        }
+
+        .file-card.compact .file-icon.code {
+            background: linear-gradient(135deg, rgba(96, 125, 139, 0.1) 0%, rgba(96, 125, 139, 0.2) 100%);
+            color: #607d8b;
+        }
+
+        .file-card.compact .file-icon.document {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.2) 100%);
+            color: #2196f3;
+        }
+
+        .file-card.compact .play-overlay {
+            width: 18px;
+            height: 18px;
+            font-size: 8px;
+        }
+
         .file-card.compact .file-content {
             flex: 1;
             min-width: 0;
@@ -1971,6 +2499,20 @@
 
     <div class="toast" id="toast"></div>
 
+    <!-- 媒体预览模态框 -->
+    <div class="media-preview-modal" id="mediaPreviewModal">
+        <div class="media-preview-content" id="mediaPreviewContent">
+            <button class="media-close-btn" onclick="closeMediaPreview()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="mediaContainer"></div>
+            <div class="media-info" id="mediaInfo" style="display: none;">
+                <h3 id="mediaTitle"></h3>
+                <p id="mediaDetails"></p>
+            </div>
+        </div>
+    </div>
+
     <!-- 创建文件夹对话框 -->
     <div class="modal-overlay" id="createFolderModal" style="display: none;">
         <div class="modal">
@@ -2102,6 +2644,436 @@
     </div>
 
     <script>
+        // 文件类型检测和图标映射
+        function getFileType(filename) {
+            const ext = filename.toLowerCase().split('.').pop();
+            
+            // 图片文件
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico'].includes(ext)) {
+                return 'image';
+            }
+            
+            // 视频文件
+            if (['mp4', 'avi', 'mkv', 'mov', 'wmv', 'flv', 'webm', 'm4v', '3gp'].includes(ext)) {
+                return 'video';
+            }
+            
+            // 音频文件
+            if (['mp3', 'wav', 'flac', 'aac', 'ogg', 'wma', 'm4a', 'opus'].includes(ext)) {
+                return 'audio';
+            }
+            
+            // PDF文件
+            if (ext === 'pdf') {
+                return 'pdf';
+            }
+            
+            // 压缩文件
+            if (['zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'xz'].includes(ext)) {
+                return 'archive';
+            }
+            
+            // 代码文件
+            if (['js', 'ts', 'py', 'java', 'cpp', 'c', 'h', 'css', 'html', 'php', 'rb', 'go', 'rs', 'swift'].includes(ext)) {
+                return 'code';
+            }
+            
+            // 文档文件
+            if (['doc', 'docx', 'txt', 'rtf', 'odt', 'xls', 'xlsx', 'ppt', 'pptx'].includes(ext)) {
+                return 'document';
+            }
+            
+            return 'file';
+        }
+
+        function getFileIcon(fileType) {
+            const iconMap = {
+                'image': 'fa-image',
+                'video': 'fa-video',
+                'audio': 'fa-music',
+                'pdf': 'fa-file-pdf',
+                'archive': 'fa-file-archive',
+                'code': 'fa-code',
+                'document': 'fa-file-alt',
+                'file': 'fa-file'
+            };
+            return iconMap[fileType] || 'fa-file';
+        }
+
+        function canPreview(fileType) {
+            return ['image', 'video', 'audio'].includes(fileType);
+        }
+
+        // 媒体预览功能
+        function openMediaPreview(filePath, fileName, fileType) {
+            const modal = document.getElementById('mediaPreviewModal');
+            const container = document.getElementById('mediaContainer');
+            const info = document.getElementById('mediaInfo');
+            const title = document.getElementById('mediaTitle');
+            const details = document.getElementById('mediaDetails');
+            
+            // 清空容器
+            container.innerHTML = '';
+            
+            let mediaElement;
+            const fileUrl = `/uploads/${filePath}`;
+            
+            if (fileType === 'image') {
+                mediaElement = document.createElement('img');
+                mediaElement.src = fileUrl;
+                mediaElement.alt = fileName;
+                mediaElement.onload = function() {
+                    details.textContent = `分辨率: ${this.naturalWidth} × ${this.naturalHeight}`;
+                };
+            } else if (fileType === 'video') {
+                mediaElement = document.createElement('video');
+                mediaElement.src = fileUrl;
+                mediaElement.controls = true;
+                mediaElement.autoplay = false;
+                mediaElement.onloadedmetadata = function() {
+                    const duration = Math.round(this.duration);
+                    const minutes = Math.floor(duration / 60);
+                    const seconds = duration % 60;
+                    details.textContent = `时长: ${minutes}:${seconds.toString().padStart(2, '0')} | 分辨率: ${this.videoWidth} × ${this.videoHeight}`;
+                };
+            } else if (fileType === 'audio') {
+                // 创建音频预览容器
+                const audioContainer = document.createElement('div');
+                audioContainer.className = 'audio-preview-container';
+                
+                // 音频图标
+                const audioIcon = document.createElement('div');
+                audioIcon.className = 'audio-preview-icon';
+                audioIcon.innerHTML = '<i class="fas fa-music"></i>';
+                
+                // 文件标题
+                const audioTitle = document.createElement('div');
+                audioTitle.className = 'audio-preview-title';
+                audioTitle.textContent = fileName;
+                
+                // 文件详情
+                const audioDetails = document.createElement('div');
+                audioDetails.className = 'audio-preview-details';
+                audioDetails.textContent = '正在加载音频信息...';
+                
+                // 音频播放器
+                mediaElement = document.createElement('audio');
+                mediaElement.className = 'audio-preview-player';
+                mediaElement.src = fileUrl;
+                mediaElement.controls = true;
+                mediaElement.autoplay = false;
+                mediaElement.preload = 'metadata';
+                mediaElement.controlsList = 'nodownload';
+                
+                // 确保控件显示
+                mediaElement.setAttribute('controls', 'controls');
+                mediaElement.style.display = 'block';
+                mediaElement.style.width = '100%';
+                mediaElement.style.height = '54px';
+                
+                // 添加加载状态
+                let isLoading = true;
+                let loadTimeout = setTimeout(() => {
+                    if (isLoading) {
+                        audioDetails.innerHTML = '<i class="fas fa-spinner"></i> 加载中...';
+                        audioDetails.className = 'audio-preview-details audio-loading';
+                    }
+                }, 500);
+                
+                mediaElement.onloadedmetadata = function() {
+                    isLoading = false;
+                    clearTimeout(loadTimeout);
+                    audioDetails.className = 'audio-preview-details';
+                    
+                    const duration = Math.round(this.duration);
+                    const minutes = Math.floor(duration / 60);
+                    const seconds = duration % 60;
+                    audioDetails.textContent = `时长: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                };
+                
+                mediaElement.onerror = function(e) {
+                    isLoading = false;
+                    clearTimeout(loadTimeout);
+                    audioDetails.className = 'audio-preview-details audio-error';
+                    audioDetails.innerHTML = '<i class="fas fa-exclamation-triangle"></i>音频文件加载失败<br><small>请检查文件格式或网络连接</small>';
+                    
+                    // 隐藏播放器控件
+                    mediaElement.style.display = 'none';
+                };
+                
+                mediaElement.onloadstart = function() {
+                    audioDetails.textContent = '正在加载音频信息...';
+                    audioDetails.className = 'audio-preview-details';
+                };
+                
+                mediaElement.oncanplay = function() {
+                    isLoading = false;
+                    clearTimeout(loadTimeout);
+                    
+                    if (audioDetails.textContent.includes('加载')) {
+                        const duration = Math.round(this.duration);
+                        const minutes = Math.floor(duration / 60);
+                        const seconds = duration % 60;
+                        audioDetails.textContent = `时长: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        audioDetails.className = 'audio-preview-details';
+                    }
+                    
+                    // 确保控件可见
+                    setTimeout(() => {
+                        if (mediaElement.offsetHeight < 30 || !mediaElement.controls) {
+                            // 如果原生控件有问题，显示自定义控件
+                            customControls.style.display = 'flex';
+                            mediaElement.style.display = 'none';
+                        } else {
+                            // 原生控件正常，确保它们可见
+                            mediaElement.style.display = 'block';
+                        }
+                    }, 500);
+                };
+                
+                // 设置超时处理
+                setTimeout(() => {
+                    if (isLoading && mediaElement.readyState === 0) {
+                        isLoading = false;
+                        clearTimeout(loadTimeout);
+                        audioDetails.className = 'audio-preview-details audio-error';
+                        audioDetails.innerHTML = '<i class="fas fa-exclamation-triangle"></i>音频加载超时<br><small>请检查网络连接后重试</small>';
+                        mediaElement.style.display = 'none';
+                    }
+                }, 10000); // 10秒超时
+                
+                // 创建自定义控制按钮
+                const customControls = document.createElement('div');
+                customControls.className = 'audio-custom-controls';
+                customControls.style.display = 'none'; // 默认隐藏，仅在原生控件有问题时显示
+                
+                const playBtn = document.createElement('button');
+                playBtn.className = 'audio-play-btn';
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                
+                const timeDisplay = document.createElement('div');
+                timeDisplay.className = 'audio-time-display';
+                timeDisplay.textContent = '0:00 / 0:00';
+                
+                const volumeControl = document.createElement('div');
+                volumeControl.className = 'audio-volume-control';
+                volumeControl.innerHTML = `
+                    <i class="fas fa-volume-up" style="color: #9c27b0; font-size: 16px;"></i>
+                    <input type="range" class="audio-volume-slider" min="0" max="100" value="100">
+                `;
+                
+                customControls.appendChild(playBtn);
+                customControls.appendChild(timeDisplay);
+                customControls.appendChild(volumeControl);
+                
+                // 播放/暂停功能
+                let isPlaying = false;
+                playBtn.onclick = function() {
+                    if (isPlaying) {
+                        mediaElement.pause();
+                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        isPlaying = false;
+                    } else {
+                        mediaElement.play();
+                        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        isPlaying = true;
+                    }
+                };
+                
+                // 音量控制
+                const volumeSlider = volumeControl.querySelector('.audio-volume-slider');
+                volumeSlider.oninput = function() {
+                    mediaElement.volume = this.value / 100;
+                };
+                
+                // 时间更新
+                mediaElement.ontimeupdate = function() {
+                    const current = Math.floor(this.currentTime);
+                    const duration = Math.floor(this.duration) || 0;
+                    const currentMin = Math.floor(current / 60);
+                    const currentSec = current % 60;
+                    const durationMin = Math.floor(duration / 60);
+                    const durationSec = duration % 60;
+                    timeDisplay.textContent = `${currentMin}:${currentSec.toString().padStart(2, '0')} / ${durationMin}:${durationSec.toString().padStart(2, '0')}`;
+                };
+                
+                // 播放结束
+                mediaElement.onended = function() {
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    isPlaying = false;
+                };
+                
+                // 检查原生控件是否工作
+                setTimeout(() => {
+                    const computedStyle = window.getComputedStyle(mediaElement);
+                    if (computedStyle.height === '0px' || mediaElement.offsetHeight < 30) {
+                        // 原生控件可能有问题，显示自定义控件
+                        customControls.style.display = 'flex';
+                        mediaElement.style.display = 'none';
+                    }
+                }, 1000);
+                
+                // 组装容器
+                audioContainer.appendChild(audioIcon);
+                audioContainer.appendChild(audioTitle);
+                audioContainer.appendChild(audioDetails);
+                audioContainer.appendChild(mediaElement);
+                audioContainer.appendChild(customControls);
+                
+                container.appendChild(audioContainer);
+                
+                // 不使用默认的info显示
+                info.style.display = 'none';
+                modal.classList.add('active');
+                
+                // 点击模态框背景关闭
+                modal.onclick = function(e) {
+                    if (e.target === modal) {
+                        closeMediaPreview();
+                    }
+                };
+                
+                // ESC键关闭
+                document.addEventListener('keydown', handleEscapeKey);
+                return; // 提前返回，不执行下面的通用逻辑
+            }
+            
+            if (mediaElement) {
+                container.appendChild(mediaElement);
+                title.textContent = fileName;
+                info.style.display = 'block';
+                modal.classList.add('active');
+                
+                // 点击模态框背景关闭
+                modal.onclick = function(e) {
+                    if (e.target === modal) {
+                        closeMediaPreview();
+                    }
+                };
+                
+                // ESC键关闭
+                document.addEventListener('keydown', handleEscapeKey);
+            }
+        }
+
+        function closeMediaPreview() {
+            const modal = document.getElementById('mediaPreviewModal');
+            const container = document.getElementById('mediaContainer');
+            
+            modal.classList.remove('active');
+            
+            // 停止所有媒体播放
+            container.querySelectorAll('video, audio').forEach(media => {
+                media.pause();
+                media.currentTime = 0;
+            });
+            
+            // 移除ESC键监听
+            document.removeEventListener('keydown', handleEscapeKey);
+            
+            // 延迟清空内容，等待动画完成
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 300);
+        }
+
+        function handleEscapeKey(e) {
+            if (e.key === 'Escape') {
+                closeMediaPreview();
+            }
+        }
+
+        // 生成文件缩略图
+        function generateThumbnail(filePath, fileName, fileType, iconElement) {
+            if (fileType === 'image') {
+                const img = document.createElement('img');
+                img.className = 'file-thumbnail';
+                img.src = `/uploads/${filePath}`;
+                img.onload = function() {
+                    this.classList.add('loaded');
+                    iconElement.classList.add('has-preview');
+                };
+                img.onerror = function() {
+                    console.log('Failed to load thumbnail for:', fileName);
+                };
+                iconElement.appendChild(img);
+            } else if (fileType === 'video') {
+                // 对于视频，我们可以尝试生成第一帧缩略图
+                const video = document.createElement('video');
+                video.src = `/uploads/${filePath}`;
+                video.muted = true;
+                video.preload = 'metadata';
+                video.style.display = 'none';
+                
+                video.onloadedmetadata = function() {
+                    // 设置到视频的10%位置获取缩略图
+                    this.currentTime = Math.max(1, this.duration * 0.1);
+                };
+                
+                video.onseeked = function() {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = 48;
+                        canvas.height = 48;
+                        
+                        // 计算缩放比例以适应正方形
+                        const scale = Math.min(48 / this.videoWidth, 48 / this.videoHeight);
+                        const width = this.videoWidth * scale;
+                        const height = this.videoHeight * scale;
+                        const x = (48 - width) / 2;
+                        const y = (48 - height) / 2;
+                        
+                        ctx.drawImage(this, x, y, width, height);
+                        
+                        const img = document.createElement('img');
+                        img.className = 'file-thumbnail';
+                        img.src = canvas.toDataURL();
+                        img.onload = function() {
+                            this.classList.add('loaded');
+                            iconElement.classList.add('has-preview');
+                        };
+                        iconElement.appendChild(img);
+                        
+                        // 添加播放按钮
+                        const playBtn = document.createElement('button');
+                        playBtn.className = 'play-overlay';
+                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        playBtn.onclick = function(e) {
+                            e.stopPropagation();
+                            openMediaPreview(filePath, fileName, fileType);
+                        };
+                        iconElement.appendChild(playBtn);
+                        
+                        // 移除视频元素
+                        video.remove();
+                    } catch (error) {
+                        console.log('Failed to generate video thumbnail:', error);
+                        video.remove();
+                    }
+                };
+                
+                video.onerror = function() {
+                    console.log('Failed to load video for thumbnail:', fileName);
+                    video.remove();
+                };
+                
+                // 添加到DOM中（隐藏状态）
+                document.body.appendChild(video);
+            } else if (fileType === 'audio') {
+                // 为音频文件添加播放按钮
+                const playBtn = document.createElement('button');
+                playBtn.className = 'play-overlay';
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    openMediaPreview(filePath, fileName, fileType);
+                };
+                iconElement.appendChild(playBtn);
+                iconElement.classList.add('has-preview');
+            }
+        }
+
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         const progressBar = document.getElementById('progressBar');
@@ -2904,9 +3876,13 @@
                 const displayName = file.webkitRelativePath || file.name;
                 const isFromFolder = !!file.webkitRelativePath;
                 
+                // 检测文件类型
+                const fileType = getFileType(file.name);
+                const fileIcon = getFileIcon(fileType);
+                
                 fileDiv.innerHTML = `
-                    <div class="preview-file-icon">
-                        <i class="fas ${isFromFolder ? 'fa-folder-open' : 'fa-file'}"></i>
+                    <div class="preview-file-icon ${fileType}">
+                        <i class="fas ${isFromFolder ? 'fa-folder-open' : fileIcon}"></i>
                     </div>
                     <div class="preview-file-info">
                         <div class="preview-file-name-container">
@@ -3053,10 +4029,15 @@
                                 </div>
                             `;
                         } else {
+                            // 检测文件类型
+                            const fileType = getFileType(file.name);
+                            const fileIcon = getFileIcon(fileType);
+                            const canShowPreview = canPreview(fileType);
+                            
                             fileCard.innerHTML = `
                                 <div class="file-header">
-                                    <div class="file-icon">
-                                        <i class="fas fa-file"></i>
+                                    <div class="file-icon ${fileType}" onclick="${canShowPreview ? `openMediaPreview('${file.path}', '${file.name}', '${fileType}')` : ''}">
+                                        <i class="fas ${fileIcon}"></i>
                                     </div>
                                     <div class="file-content">
                                         <div class="file-name">${file.name}</div>
@@ -3073,8 +4054,14 @@
                                 <div class="file-info">
                                     <div><i class="fas fa-weight"></i> 大小：${formatFileSize(file.size)}</div>
                                     <div><i class="fas fa-clock"></i> 上传时间：${file.created}</div>
+                                    <div><i class="fas fa-tag"></i> 类型：${fileType.toUpperCase()}</div>
                                 </div>
                                 <div class="file-actions">
+                                    ${canShowPreview ? `
+                                        <button class="download-btn" onclick="openMediaPreview('${file.path}', '${file.name}', '${fileType}')">
+                                            <i class="fas fa-eye"></i> 预览
+                                        </button>
+                                    ` : ''}
                                     <a href="/download/${file.path}" class="download-btn" target="_blank">
                                         <i class="fas fa-download"></i> 下载
                                     </a>
@@ -3089,6 +4076,12 @@
                                     </button>
                                 </div>
                             `;
+                            
+                            // 生成缩略图预览
+                            const iconElement = fileCard.querySelector('.file-icon');
+                            if (canShowPreview) {
+                                generateThumbnail(file.path, file.name, fileType, iconElement);
+                            }
                         }
                         fileList.appendChild(fileCard);
                     });
