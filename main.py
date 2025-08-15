@@ -674,6 +674,9 @@ async def upload_file(
     file: UploadFile = File(...),
     comment: str = Form(None),
     session_id: str = Form(None),  # 改为可选参数
+    relative_path: str = Form(None),  # 文件夹相对路径
+    target_folder: str = Form(None),  # 目标文件夹
+    custom_filename: str = Form(None),  # 自定义文件名
     request: Request = None
 ):
     # 获取用户信息
@@ -693,9 +696,42 @@ async def upload_file(
         else:
             uploader_username = f"用户ip_{uploader_ip}"
     
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{timestamp}_{file.filename}"
-    file_path = os.path.join(UPLOAD_DIR, filename)
+    # 处理文件夹结构上传
+    if relative_path:
+        # 文件夹上传，保持目录结构
+        file_dir = os.path.dirname(relative_path)
+        if target_folder:
+            full_dir = os.path.join(UPLOAD_DIR, target_folder, file_dir) if file_dir else os.path.join(UPLOAD_DIR, target_folder)
+        else:
+            full_dir = os.path.join(UPLOAD_DIR, file_dir) if file_dir else UPLOAD_DIR
+        
+        # 确保目录存在
+        if not os.path.exists(full_dir):
+            os.makedirs(full_dir)
+        
+        # 使用原始文件名，不添加时间戳
+        filename = custom_filename if custom_filename else file.filename
+        file_path = os.path.join(full_dir, filename)
+        relative_file_path = os.path.join(target_folder or "", relative_path) if target_folder else relative_path
+    else:
+        # 普通文件上传
+        if custom_filename:
+            # 使用自定义文件名
+            filename = custom_filename
+        else:
+            # 使用时间戳前缀的原始文件名
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"{timestamp}_{file.filename}"
+        
+        if target_folder:
+            full_dir = os.path.join(UPLOAD_DIR, target_folder)
+            if not os.path.exists(full_dir):
+                os.makedirs(full_dir)
+            file_path = os.path.join(full_dir, filename)
+            relative_file_path = os.path.join(target_folder, filename)
+        else:
+            file_path = os.path.join(UPLOAD_DIR, filename)
+            relative_file_path = filename
     
     # 进一步优化大文件传输 - 局域网高速传输配置
     # 将chunk_size增加到16MB，最大化局域网传输效率
@@ -727,16 +763,18 @@ async def upload_file(
         "file_size": total_size
     }
     
-    metadata_path = os.path.join(UPLOAD_DIR, f"{filename}.meta")
+    metadata_path = file_path + ".meta"
     async with aiofiles.open(metadata_path, "w", encoding="utf-8") as f:
         await f.write(json.dumps(metadata, ensure_ascii=False))
     
     return {
         "filename": filename,
-        "path": f"/uploads/{filename}",
+        "path": f"/uploads/{relative_file_path}",
+        "relative_path": relative_file_path,
         "uploader_username": uploader_username,
         "comment": comment,
-        "size": total_size
+        "size": total_size,
+        "is_folder_upload": bool(relative_path)
     }
 
 @app.get("/files")
@@ -758,7 +796,7 @@ async def list_files(
         # 遍历当前目录
         for item_name in os.listdir(current_dir):
             # 跳过元数据文件
-            if item_name.endswith('.meta'):
+            if item_name.endswith('.meta') or item_name == '.folder_meta':
                 continue
                 
             item_path = os.path.join(current_dir, item_name)

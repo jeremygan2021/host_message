@@ -92,9 +92,45 @@
             transition: all 0.3s ease;
             padding: 40px;
             margin: 20px 0;
-            cursor: pointer;
             position: relative;
             overflow: hidden;
+        }
+
+        .upload-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .upload-btn-style {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+        }
+
+        .upload-btn-style:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .upload-btn-style:active {
+            transform: translateY(-1px);
+        }
+
+        .upload-btn-style:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
         }
 
         .upload-zone:hover {
@@ -129,12 +165,11 @@
 
         .file-input {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
+            width: 1px;
+            height: 1px;
             opacity: 0;
-            cursor: pointer;
+            overflow: hidden;
+            pointer-events: none;
         }
 
         .files-grid {
@@ -779,6 +814,76 @@
             margin-bottom: 8px;
         }
 
+        .preview-file-type {
+            font-size: 0.8em;
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .preview-file-name-container {
+            margin-bottom: 8px;
+        }
+
+        .preview-file-name-container label {
+            display: block;
+            font-size: 0.85em;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .preview-file-name-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .preview-file-name-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .preview-file-name-input:invalid,
+        .preview-file-name-input.invalid {
+            border-color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+
+        .filename-error {
+            font-size: 0.75em;
+            color: #dc3545;
+            margin-top: 4px;
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preview-file-path {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 6px;
+            padding: 4px 8px;
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: 3px;
+            word-break: break-all;
+        }
+
         .preview-file-comment {
             width: 100%;
             padding: 8px;
@@ -841,6 +946,19 @@
             .preview-file-comment {
                 padding: 6px;
                 font-size: 0.85em;
+            }
+
+            .preview-file-name-input {
+                padding: 6px 8px;
+                font-size: 0.85em;
+            }
+
+            .preview-file-name-container label {
+                font-size: 0.8em;
+            }
+
+            .filename-error {
+                font-size: 0.7em;
             }
 
             .remove-file-btn {
@@ -1011,6 +1129,19 @@
             .upload-zone {
                 padding: 25px 15px;
                 margin: 10px 0;
+            }
+
+            .upload-buttons {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            .upload-btn-style {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 20px;
+                font-size: 1em;
             }
 
             .upload-icon {
@@ -1245,6 +1376,60 @@
 
         .upload-all-btn:not(:disabled):hover i {
             transform: translateY(-2px);
+        }
+
+        .batch-rename-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 0.95em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .batch-rename-btn:hover {
+            background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+            transform: translateY(-1px);
+        }
+
+        .rename-preview {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background: #f8f9fa;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .rename-preview-item {
+            padding: 2px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .rename-preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .rename-original {
+            color: #666;
+        }
+
+        .rename-arrow {
+            color: var(--primary-color);
+            margin: 0 8px;
+        }
+
+        .rename-new {
+            color: #28a745;
+            font-weight: 500;
         }
 
         /* 文件管理工具栏样式 */
@@ -1715,6 +1900,9 @@
                         <i class="fas fa-home"></i> 根目录
                     </a>
                 </div>
+                <button class="btn btn-secondary" id="backBtn" onclick="goBack()" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> 返回上级
+                </button>
                 <button class="btn btn-primary" onclick="showCreateFolderDialog()">
                     <i class="fas fa-folder-plus"></i> 新建文件夹
                 </button>
@@ -1744,9 +1932,18 @@
         <div class="upload-section">
             <div class="upload-zone" id="dropZone">
                 <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                <h2>拖拽文件到这里或点击上传</h2>
-                <p class="upload-text">支持多文件上传</p>
+                <h2>拖拽文件或文件夹到这里上传</h2>
+                <p class="upload-text">支持多文件和文件夹上传</p>
+                <div class="upload-buttons">
+                    <button type="button" class="upload-btn-style" onclick="selectFiles()">
+                        <i class="fas fa-file"></i> 选择文件
+                    </button>
+                    <button type="button" class="upload-btn-style" onclick="selectFolder()">
+                        <i class="fas fa-folder"></i> 选择文件夹
+                    </button>
+                </div>
                 <input type="file" id="fileInput" class="file-input" multiple>
+                <input type="file" id="folderInput" class="file-input" multiple webkitdirectory style="display: none;">
             </div>
             <div class="upload-preview" id="uploadPreview" style="display: none;">
                 <div class="preview-header">
@@ -1757,6 +1954,9 @@
                 </div>
                 <div class="preview-files" id="previewFiles"></div>
                 <div class="preview-actions">
+                    <button class="batch-rename-btn" onclick="showBatchRenameDialog()" title="批量重命名">
+                        <i class="fas fa-edit"></i> 批量重命名
+                    </button>
                     <button class="upload-all-btn" onclick="uploadAllFiles()">
                         <i class="fas fa-cloud-upload-alt"></i> 开始上传
                     </button>
@@ -1864,6 +2064,43 @@
         </div>
     </div>
 
+    <!-- 批量重命名对话框 -->
+    <div class="modal-overlay" id="batchRenameModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>批量重命名</h3>
+                <button class="close-btn" onclick="hideBatchRenameDialog()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="renamePattern">命名模式：</label>
+                    <select id="renamePattern" onchange="updateRenamePreview()">
+                        <option value="sequential">序号命名 (文件1, 文件2, ...)</option>
+                        <option value="timestamp">时间戳命名</option>
+                        <option value="prefix">添加前缀</option>
+                        <option value="suffix">添加后缀</option>
+                        <option value="custom">自定义模式</option>
+                    </select>
+                </div>
+                <div class="form-group" id="customInputGroup" style="display: none;">
+                    <label for="customInput">自定义内容：</label>
+                    <input type="text" id="customInput" placeholder="输入前缀/后缀/自定义模式" oninput="updateRenamePreview()">
+                    <small>自定义模式支持：{name} = 原文件名, {index} = 序号, {ext} = 扩展名</small>
+                </div>
+                <div class="form-group">
+                    <label>预览效果：</label>
+                    <div id="renamePreview" class="rename-preview"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideBatchRenameDialog()">取消</button>
+                <button class="btn btn-primary" onclick="applyBatchRename()">应用</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
@@ -1876,6 +2113,16 @@
             dropZone.addEventListener(eventName, preventDefaults, false);
             document.body.addEventListener(eventName, preventDefaults, false);
         });
+
+        // 防止按钮区域的拖拽事件影响
+        const uploadButtons = document.querySelector('.upload-buttons');
+        if (uploadButtons) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadButtons.addEventListener(eventName, function(e) {
+                    e.stopPropagation();
+                }, false);
+            });
+        }
 
         function preventDefaults(e) {
             e.preventDefault();
@@ -1903,11 +2150,80 @@
         function handleDrop(e) {
             const dt = e.dataTransfer;
             const files = dt.files;
-            handleFiles(files);
+            
+            // 检查是否包含文件夹
+            const filesArray = Array.from(files);
+            const hasDirectoryItems = Array.from(dt.items).some(item => 
+                item.webkitGetAsEntry && item.webkitGetAsEntry().isDirectory
+            );
+            
+            if (hasDirectoryItems) {
+                handleDirectoryDrop(dt);
+            } else {
+                handleFiles(files);
+            }
+        }
+
+        // 处理文件夹拖拽
+        async function handleDirectoryDrop(dataTransfer) {
+            const items = Array.from(dataTransfer.items);
+            const allFiles = [];
+            
+            for (const item of items) {
+                if (item.webkitGetAsEntry) {
+                    const entry = item.webkitGetAsEntry();
+                    if (entry) {
+                        const files = await processEntry(entry);
+                        allFiles.push(...files);
+                    }
+                }
+            }
+            
+            if (allFiles.length > 0) {
+                handleFolderFiles(allFiles);
+            }
+        }
+
+        // 递归处理目录条目
+        function processEntry(entry, path = '') {
+            return new Promise((resolve) => {
+                if (entry.isFile) {
+                    entry.file((file) => {
+                        // 设置文件的相对路径
+                        file.webkitRelativePath = path + entry.name;
+                        resolve([file]);
+                    });
+                } else if (entry.isDirectory) {
+                    const dirReader = entry.createReader();
+                    dirReader.readEntries(async (entries) => {
+                        const allFiles = [];
+                        for (const childEntry of entries) {
+                            const childFiles = await processEntry(childEntry, path + entry.name + '/');
+                            allFiles.push(...childFiles);
+                        }
+                        resolve(allFiles);
+                    });
+                }
+            });
         }
 
         fileInput.addEventListener('change', function(e) {
-            handleFiles(this.files);
+            console.log('Files selected, files count:', this.files.length);
+            if (this.files.length > 0) {
+                handleFiles(this.files);
+                // 清空输入，允许重复选择同一文件
+                this.value = '';
+            }
+        });
+
+        // 添加文件夹输入事件
+        document.getElementById('folderInput').addEventListener('change', function(e) {
+            console.log('Folder selected, files count:', this.files.length);
+            if (this.files.length > 0) {
+                handleFolderFiles(this.files);
+                // 清空输入，允许重复选择同一文件夹
+                this.value = '';
+            }
         });
 
         // 存储待上传文件的数组
@@ -2078,6 +2394,29 @@
             }
         }
 
+        // 单文件上传函数
+        async function uploadSingleFile(file, isQuickUpload = false, isFromFolder = false, customFilename = null) {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            // 如果是文件夹上传，需要保持相对路径结构
+            if (isFromFolder && file.webkitRelativePath) {
+                formData.append('relative_path', file.webkitRelativePath);
+            }
+            
+            // 添加当前目录信息
+            if (currentFolder) {
+                formData.append('target_folder', currentFolder);
+            }
+            
+            // 添加自定义文件名
+            if (customFilename) {
+                formData.append('custom_filename', customFilename);
+            }
+            
+            return uploadFile(formData, file, isQuickUpload);
+        }
+
         // 修改文件上传函数 - 移除分片上传，直接上传整个文件
         async function uploadFile(formData, file, isQuickUpload = false) {
             return new Promise((resolve, reject) => {
@@ -2145,17 +2484,257 @@
                 // 快速上传模式
                 initializeProgressContainer();
                 Array.from(files).forEach(file => {
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    uploadFile(formData, file, true).then(() => {
-                        loadFiles();
-                    });
+                    uploadSingleFile(file, true);
                 });
             } else {
                 // 预览模式
                 pendingFiles = [...pendingFiles, ...Array.from(files)];
                 showPreview();
             }
+        }
+
+        // 处理文件夹上传
+        function handleFolderFiles(files) {
+            const quickUpload = document.getElementById('quickUploadToggle').checked;
+            const filesArray = Array.from(files);
+            
+            console.log('Processing folder files:', filesArray.length);
+            console.log('Files with relative paths:', filesArray.map(f => ({name: f.name, path: f.webkitRelativePath})));
+            
+            if (filesArray.length === 0) {
+                showToast('未选择任何文件');
+                return;
+            }
+            
+            // 检查文件是否有相对路径（确认是文件夹上传）
+            const hasRelativePaths = filesArray.some(file => file.webkitRelativePath);
+            if (!hasRelativePaths) {
+                showToast('请选择文件夹而不是单独的文件');
+                return;
+            }
+            
+            showToast(`检测到文件夹，包含 ${filesArray.length} 个文件`);
+            
+            if (quickUpload) {
+                // 快速上传模式
+                initializeProgressContainer();
+                filesArray.forEach(file => {
+                    uploadSingleFile(file, true, true);
+                });
+            } else {
+                // 预览模式
+                pendingFiles = [...pendingFiles, ...filesArray];
+                showPreview();
+            }
+        }
+
+        // 选择文件函数
+        function selectFiles() {
+            console.log('Selecting files...');
+            document.getElementById('fileInput').click();
+        }
+
+        // 选择文件夹函数
+        function selectFolder() {
+            console.log('Selecting folder...');
+            document.getElementById('folderInput').click();
+        }
+
+        // 返回上级目录
+        function goBack() {
+            if (currentFolder) {
+                const parts = currentFolder.split('/');
+                parts.pop(); // 移除最后一级
+                const parentFolder = parts.join('/');
+                navigateToFolder(parentFolder);
+            }
+        }
+
+        // 验证文件名
+        function validateFilename(input) {
+            const filename = input.value.trim();
+            const invalidChars = /[\/\\:*?"<>|]/;
+            const isEmpty = filename.length === 0;
+            const isTooLong = filename.length > 255;
+            
+            // 移除之前的错误提示
+            const existingError = input.parentNode.querySelector('.filename-error');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // 重置样式
+            input.classList.remove('invalid');
+            
+            if (isEmpty) {
+                showFilenameError(input, '文件名不能为空');
+                return false;
+            }
+            
+            if (invalidChars.test(filename)) {
+                showFilenameError(input, '文件名不能包含以下字符：/ \\ : * ? " < > |');
+                return false;
+            }
+            
+            if (isTooLong) {
+                showFilenameError(input, '文件名不能超过255个字符');
+                return false;
+            }
+            
+            if (filename.startsWith('.') || filename.endsWith('.')) {
+                showFilenameError(input, '文件名不能以点号开头或结尾');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // 显示文件名错误
+        function showFilenameError(input, message) {
+            input.classList.add('invalid');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'filename-error';
+            errorDiv.textContent = message;
+            input.parentNode.appendChild(errorDiv);
+        }
+
+        // 显示批量重命名对话框
+        function showBatchRenameDialog() {
+            if (pendingFiles.length === 0) {
+                showToast('没有文件可以重命名');
+                return;
+            }
+            document.getElementById('batchRenameModal').style.display = 'flex';
+            updateRenamePreview();
+        }
+
+        // 隐藏批量重命名对话框
+        function hideBatchRenameDialog() {
+            document.getElementById('batchRenameModal').style.display = 'none';
+            document.getElementById('renamePattern').value = 'sequential';
+            document.getElementById('customInput').value = '';
+            document.getElementById('customInputGroup').style.display = 'none';
+        }
+
+        // 更新重命名预览
+        function updateRenamePreview() {
+            const pattern = document.getElementById('renamePattern').value;
+            const customInput = document.getElementById('customInput').value;
+            const customGroup = document.getElementById('customInputGroup');
+            const preview = document.getElementById('renamePreview');
+            
+            // 显示/隐藏自定义输入框
+            if (pattern === 'prefix' || pattern === 'suffix' || pattern === 'custom') {
+                customGroup.style.display = 'block';
+            } else {
+                customGroup.style.display = 'none';
+            }
+            
+            // 生成预览
+            let previewHTML = '';
+            const now = new Date();
+            const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            
+            pendingFiles.forEach((file, index) => {
+                const originalName = file.name;
+                const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
+                const ext = originalName.includes('.') ? originalName.split('.').pop() : '';
+                let newName = originalName;
+                
+                switch (pattern) {
+                    case 'sequential':
+                        newName = `文件${index + 1}${ext ? '.' + ext : ''}`;
+                        break;
+                    case 'timestamp':
+                        newName = `${timestamp}_${index + 1}${ext ? '.' + ext : ''}`;
+                        break;
+                    case 'prefix':
+                        if (customInput) {
+                            newName = `${customInput}${originalName}`;
+                        }
+                        break;
+                    case 'suffix':
+                        if (customInput) {
+                            newName = `${nameWithoutExt}${customInput}${ext ? '.' + ext : ''}`;
+                        }
+                        break;
+                    case 'custom':
+                        if (customInput) {
+                            newName = customInput
+                                .replace(/{name}/g, nameWithoutExt)
+                                .replace(/{index}/g, (index + 1).toString())
+                                .replace(/{ext}/g, ext);
+                            if (ext && !newName.includes('.')) {
+                                newName += '.' + ext;
+                            }
+                        }
+                        break;
+                }
+                
+                previewHTML += `
+                    <div class="rename-preview-item">
+                        <span class="rename-original">${originalName}</span>
+                        <span class="rename-arrow">→</span>
+                        <span class="rename-new">${newName}</span>
+                    </div>
+                `;
+            });
+            
+            preview.innerHTML = previewHTML;
+        }
+
+        // 应用批量重命名
+        function applyBatchRename() {
+            const pattern = document.getElementById('renamePattern').value;
+            const customInput = document.getElementById('customInput').value;
+            
+            if ((pattern === 'prefix' || pattern === 'suffix' || pattern === 'custom') && !customInput.trim()) {
+                showToast('请输入自定义内容');
+                return;
+            }
+            
+            const now = new Date();
+            const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            
+            // 应用重命名到每个文件输入框
+            document.querySelectorAll('.preview-file-name-input').forEach((input, inputIndex) => {
+                const fileIndex = parseInt(input.dataset.index);
+                const file = pendingFiles[fileIndex];
+                const originalName = file.name;
+                const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
+                const ext = originalName.includes('.') ? originalName.split('.').pop() : '';
+                let newName = originalName;
+                
+                switch (pattern) {
+                    case 'sequential':
+                        newName = `文件${fileIndex + 1}${ext ? '.' + ext : ''}`;
+                        break;
+                    case 'timestamp':
+                        newName = `${timestamp}_${fileIndex + 1}${ext ? '.' + ext : ''}`;
+                        break;
+                    case 'prefix':
+                        newName = `${customInput}${originalName}`;
+                        break;
+                    case 'suffix':
+                        newName = `${nameWithoutExt}${customInput}${ext ? '.' + ext : ''}`;
+                        break;
+                    case 'custom':
+                        newName = customInput
+                            .replace(/{name}/g, nameWithoutExt)
+                            .replace(/{index}/g, (fileIndex + 1).toString())
+                            .replace(/{ext}/g, ext);
+                        if (ext && !newName.includes('.')) {
+                            newName += '.' + ext;
+                        }
+                        break;
+                }
+                
+                input.value = newName;
+                validateFilename(input);
+            });
+            
+            hideBatchRenameDialog();
+            showToast('批量重命名已应用');
         }
 
         // 修改批量上传函数
@@ -2174,28 +2753,81 @@
             initializeProgressContainer();
             const maxConcurrent = 3;
             const comments = {};
+            const customFilenames = {};
+            
+            // 获取文件备注
             document.querySelectorAll('.preview-file-comment').forEach(input => {
                 const index = input.dataset.index;
                 comments[index] = input.value.trim();
             });
+            
+            // 验证所有文件名并获取自定义文件名
+            let hasInvalidFilenames = false;
+            document.querySelectorAll('.preview-file-name-input').forEach(input => {
+                const index = input.dataset.index;
+                const customName = input.value.trim();
+                
+                // 验证文件名
+                if (!validateFilename(input)) {
+                    hasInvalidFilenames = true;
+                    return;
+                }
+                
+                if (customName && customName !== pendingFiles[index].name) {
+                    customFilenames[index] = customName;
+                }
+            });
+            
+            // 如果有无效文件名，停止上传
+            if (hasInvalidFilenames) {
+                showToast('请修正无效的文件名后再上传');
+                // 恢复上传按钮
+                if (uploadBtn) {
+                    uploadBtn.disabled = false;
+                    uploadBtn.style.opacity = '1';
+                    uploadBtn.innerHTML = `
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        上传 ${pendingFiles.length} 个文件
+                    `;
+                }
+                return;
+            }
 
-            try {
-                const uploadTasks = pendingFiles.map((file, index) => {
-                    return async () => {
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        if (comments[index]) {
-                            formData.append('comment', comments[index]);
-                        }
-                        try {
-                            await uploadFile(formData, file, false);
-                        } catch (error) {
-                            if (error.message !== 'Upload cancelled') {
-                                console.error('上传失败:', error);
+                            try {
+                    const uploadTasks = pendingFiles.map((file, index) => {
+                        return async () => {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            
+                            // 添加备注
+                            if (comments[index]) {
+                                formData.append('comment', comments[index]);
                             }
-                        }
-                    };
-                });
+                            
+                            // 添加自定义文件名
+                            if (customFilenames[index]) {
+                                formData.append('custom_filename', customFilenames[index]);
+                            }
+                            
+                            // 处理文件夹路径
+                            if (file.webkitRelativePath) {
+                                formData.append('relative_path', file.webkitRelativePath);
+                            }
+                            
+                            // 添加当前目录信息
+                            if (currentFolder) {
+                                formData.append('target_folder', currentFolder);
+                            }
+                            
+                            try {
+                                await uploadFile(formData, file, false);
+                            } catch (error) {
+                                if (error.message !== 'Upload cancelled') {
+                                    console.error('上传失败:', error);
+                                }
+                            }
+                        };
+                    });
 
                 while (uploadTasks.length > 0) {
                     const batch = uploadTasks.splice(0, maxConcurrent);
@@ -2267,13 +2899,29 @@
             pendingFiles.forEach((file, index) => {
                 const fileDiv = document.createElement('div');
                 fileDiv.className = 'preview-file';
+                
+                // 确定显示的文件名（如果是文件夹上传，显示相对路径）
+                const displayName = file.webkitRelativePath || file.name;
+                const isFromFolder = !!file.webkitRelativePath;
+                
                 fileDiv.innerHTML = `
                     <div class="preview-file-icon">
-                        <i class="fas fa-file"></i>
+                        <i class="fas ${isFromFolder ? 'fa-folder-open' : 'fa-file'}"></i>
                     </div>
                     <div class="preview-file-info">
-                        <div class="preview-file-name">${file.name}</div>
+                        <div class="preview-file-name-container">
+                            <label>文件名：</label>
+                            <input type="text" 
+                                   class="preview-file-name-input" 
+                                   value="${file.name}"
+                                   data-index="${index}"
+                                   placeholder="输入文件名"
+                                   onblur="validateFilename(this)"
+                                   oninput="validateFilename(this)">
+                        </div>
+                        ${isFromFolder ? `<div class="preview-file-path">路径：${file.webkitRelativePath}</div>` : ''}
                         <div class="preview-file-size">${formatFileSize(file.size)}</div>
+                        ${isFromFolder ? '<div class="preview-file-type">来自文件夹</div>' : ''}
                         <input type="text" 
                                class="preview-file-comment" 
                                placeholder="添加文件说明（可选）"
@@ -2326,6 +2974,7 @@
             }
             
             document.getElementById('fileInput').value = '';
+            document.getElementById('folderInput').value = '';
         }
 
         function showToast(message) {
@@ -2469,7 +3118,18 @@
         // 导航到文件夹
         function navigateToFolder(folder) {
             currentFolder = folder;
+            updateBackButton();
             loadFiles();
+        }
+
+        // 更新返回按钮状态
+        function updateBackButton() {
+            const backBtn = document.getElementById('backBtn');
+            if (currentFolder && currentFolder.trim() !== '') {
+                backBtn.style.display = 'inline-flex';
+            } else {
+                backBtn.style.display = 'none';
+            }
         }
 
         // 处理搜索
@@ -2860,6 +3520,9 @@
                 }
             }
             
+            // 初始化返回按钮状态
+            updateBackButton();
+            
             // 初始加载文件列表
             loadFiles();
             
@@ -2910,6 +3573,7 @@
                     hideMoveFileDialog();
                     hideRenameFileDialog();
                     hideRenameFolderDialog();
+                    hideBatchRenameDialog();
                 }
                 
                 // Enter 在各种对话框中执行相应操作
@@ -2920,6 +3584,8 @@
                         confirmRenameFile();
                     } else if (document.getElementById('renameFolderModal').style.display === 'flex') {
                         confirmRenameFolder();
+                    } else if (document.getElementById('batchRenameModal').style.display === 'flex') {
+                        applyBatchRename();
                     }
                 }
             });
