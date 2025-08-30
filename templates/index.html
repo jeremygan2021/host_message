@@ -192,6 +192,226 @@
             box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
         }
 
+        .user-avatar {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            border-color: var(--secondary-color);
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Admin登录弹窗样式 */
+        .admin-login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .admin-login-modal.active {
+            display: flex;
+        }
+
+        .admin-login-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .admin-login-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-login-header h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.5em;
+        }
+
+        .admin-login-header p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .admin-login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .admin-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .admin-form-group label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .admin-form-group input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .admin-form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .admin-login-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .admin-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .admin-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .admin-btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+        }
+
+        .admin-btn-secondary {
+            background: #f5f5f5;
+            color: var(--text-color);
+            border: 1px solid #ddd;
+        }
+
+        .admin-btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .admin-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #999;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .admin-close-btn:hover {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .admin-login-error {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-left: 4px solid #c33;
+        }
+
+        .admin-login-success {
+            background: #efe;
+            color: #363;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-left: 4px solid #363;
+        }
+
+        .admin-login-info {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-left: 4px solid #1976d2;
+        }
+
+        /* Admin状态指示器 */
+        .admin-indicator {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 16px;
+            height: 16px;
+            background: #4CAF50;
+            border: 2px solid white;
+            border-radius: 50%;
+            animation: adminPulse 2s infinite;
+        }
+
+        @keyframes adminPulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
         .user-details {
             display: flex;
             flex-direction: column;
@@ -4921,7 +5141,8 @@
             ip: '',
             name: '',
             avatar: '',
-            isAdmin: false
+            isAdmin: false,
+            adminSessionId: null  // 添加admin会话ID
         };
 
         // 全局IP名称映射
@@ -5021,8 +5242,14 @@
                 // 使用智能头像分配
                 currentUserInfo.avatar = getAvatarForIP(currentUserInfo.ip);
                 
+                // 检查admin会话状态
+                await checkAdminSession();
+                
                 // 更新UI
                 updateUserInfoDisplay();
+                
+                // 设置头像点击事件
+                setupAvatarClickEvent();
                 
             } catch (error) {
                 console.error('加载用户信息失败:', error);
@@ -5035,6 +5262,7 @@
                 };
                 currentUserInfo.isAdmin = false;
                 updateUserInfoDisplay();
+                setupAvatarClickEvent();
             }
         }
 
@@ -5047,6 +5275,12 @@
             const userIP = document.getElementById('userIP');
             
             if (userInfo && userAvatar && userName && userRole && userIP) {
+                // 清除之前的admin指示器
+                const existingIndicator = userAvatar.querySelector('.admin-indicator');
+                if (existingIndicator) {
+                    existingIndicator.remove();
+                }
+                
                 // 根据头像类型显示不同的内容
                 if (currentUserInfo.avatar.type === 'image') {
                     // 显示图片头像
@@ -5058,10 +5292,17 @@
                     userAvatar.classList.add('emoji-avatar');
                 }
                 
+                // 如果已经admin登录，添加指示器
+                if (currentUserInfo.adminSessionId) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'admin-indicator';
+                    userAvatar.appendChild(indicator);
+                }
+                
                 userName.textContent = currentUserInfo.name;
                 userIP.textContent = currentUserInfo.ip;
                 
-                if (currentUserInfo.isAdmin) {
+                if (currentUserInfo.isAdmin || currentUserInfo.adminSessionId) {
                     userRole.innerHTML = `<span class="admin-badge">管理员</span> IP: <span id="userIP">${currentUserInfo.ip}</span>`;
                 } else {
                     userRole.innerHTML = `IP: <span id="userIP">${currentUserInfo.ip}</span>`;
@@ -5070,6 +5311,174 @@
                 userInfo.style.display = 'flex';
             }
         }
+
+        // Admin登录相关功能
+        function showAdminLogin() {
+            // 如果已经是admin登录状态，显示登出选项
+            if (currentUserInfo.adminSessionId) {
+                if (confirm('您已经是管理员登录状态，是否要登出？')) {
+                    logoutAdmin();
+                }
+                return;
+            }
+            
+            const modal = document.getElementById('adminLoginModal');
+            modal.classList.add('active');
+            
+            // 清空表单
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminLoginMessage').innerHTML = '';
+            
+            // 聚焦到用户名输入框
+            setTimeout(() => {
+                document.getElementById('adminUsername').focus();
+            }, 100);
+        }
+
+        function closeAdminLogin() {
+            const modal = document.getElementById('adminLoginModal');
+            modal.classList.remove('active');
+        }
+
+        async function submitAdminLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            const messageDiv = document.getElementById('adminLoginMessage');
+            
+            if (!username || !password) {
+                showAdminMessage('请输入用户名和密码', 'error');
+                return;
+            }
+            
+            try {
+                showAdminMessage('正在登录...', 'info');
+                
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('password', password);
+                
+                const response = await fetch('/admin/login', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    // 登录成功
+                    currentUserInfo.adminSessionId = result.admin_session_id;
+                    
+                    // 保存admin会话到localStorage
+                    localStorage.setItem('adminSessionId', result.admin_session_id);
+                    
+                    showAdminMessage('登录成功！', 'success');
+                    
+                    // 更新用户界面
+                    updateUserInfoDisplay();
+                    
+                    // 1秒后关闭弹窗
+                    setTimeout(() => {
+                        closeAdminLogin();
+                    }, 1000);
+                    
+                } else {
+                    showAdminMessage(result.detail || '登录失败', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Admin登录失败:', error);
+                showAdminMessage('网络错误，请稍后重试', 'error');
+            }
+        }
+
+        async function logoutAdmin() {
+            if (!currentUserInfo.adminSessionId) {
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('admin_session_id', currentUserInfo.adminSessionId);
+                
+                const response = await fetch('/admin/logout', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    console.log('Admin登出成功');
+                } else {
+                    console.warn('Admin登出失败:', result.detail);
+                }
+                
+            } catch (error) {
+                console.error('Admin登出请求失败:', error);
+            } finally {
+                // 无论服务器响应如何，都清除本地状态
+                currentUserInfo.adminSessionId = null;
+                localStorage.removeItem('adminSessionId');
+                updateUserInfoDisplay();
+            }
+        }
+
+        async function checkAdminSession() {
+            const sessionId = localStorage.getItem('adminSessionId');
+            if (!sessionId) {
+                return false;
+            }
+            
+            try {
+                const response = await fetch(`/admin/check_session?admin_session_id=${encodeURIComponent(sessionId)}`);
+                const result = await response.json();
+                
+                if (result.valid) {
+                    currentUserInfo.adminSessionId = sessionId;
+                    return true;
+                } else {
+                    // 会话无效，清除本地存储
+                    localStorage.removeItem('adminSessionId');
+                    return false;
+                }
+                
+            } catch (error) {
+                console.error('检查admin会话失败:', error);
+                localStorage.removeItem('adminSessionId');
+                return false;
+            }
+        }
+
+        function showAdminMessage(message, type) {
+            const messageDiv = document.getElementById('adminLoginMessage');
+            messageDiv.innerHTML = `<div class="admin-login-${type}">${message}</div>`;
+        }
+
+        // 点击头像事件处理
+        function setupAvatarClickEvent() {
+            const userAvatar = document.getElementById('userAvatar');
+            if (userAvatar) {
+                userAvatar.addEventListener('click', showAdminLogin);
+            }
+        }
+
+        // 点击弹窗外部关闭
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('adminLoginModal');
+            if (event.target === modal) {
+                closeAdminLogin();
+            }
+        });
+
+        // ESC键关闭弹窗
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAdminLogin();
+            }
+        });
 
         // 格式化上传者信息
         function formatUploaderInfo(uploaderUsername, uploaderIp) {
@@ -5280,5 +5689,31 @@
         `;
         document.head.appendChild(style);
     </script>
+
+    <!-- Admin登录弹窗 -->
+    <div id="adminLoginModal" class="admin-login-modal">
+        <div class="admin-login-content">
+            <button class="admin-close-btn" onclick="closeAdminLogin()">×</button>
+            <div class="admin-login-header">
+                <h3>管理员登录</h3>
+                <p>点击头像登录管理员账号</p>
+            </div>
+            <div id="adminLoginMessage"></div>
+            <form class="admin-login-form" onsubmit="submitAdminLogin(event)">
+                <div class="admin-form-group">
+                    <label for="adminUsername">用户名</label>
+                    <input type="text" id="adminUsername" name="username" required autocomplete="username">
+                </div>
+                <div class="admin-form-group">
+                    <label for="adminPassword">密码</label>
+                    <input type="password" id="adminPassword" name="password" required autocomplete="current-password">
+                </div>
+                <div class="admin-login-buttons">
+                    <button type="button" class="admin-btn admin-btn-secondary" onclick="closeAdminLogin()">取消</button>
+                    <button type="submit" class="admin-btn admin-btn-primary">登录</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html> 

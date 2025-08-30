@@ -1618,6 +1618,111 @@ async def get_ip_names():
             "message": str(e)
         }
 
+# Admin登录状态管理
+admin_sessions: Dict[str, dict] = {}
+
+@app.post("/admin/login")
+async def admin_login(
+    username: str = Form(...),
+    password: str = Form(...),
+    request: Request = None
+):
+    """Admin账号登录"""
+    try:
+        # 验证admin凭据（使用与localhost认证相同的账号密码）
+        correct_username = secrets.compare_digest(username, LOCALHOST_USERNAME)
+        correct_password = secrets.compare_digest(password, LOCALHOST_PASSWORD)
+        
+        if not (correct_username and correct_password):
+            raise HTTPException(
+                status_code=401,
+                detail="用户名或密码错误"
+            )
+        
+        # 获取客户端IP
+        client_ip = get_real_client_ip(request=request)
+        
+        # 生成admin session
+        admin_session_id = str(uuid.uuid4())
+        admin_sessions[admin_session_id] = {
+            'ip': client_ip,
+            'username': username,
+            'login_time': datetime.now(),
+            'last_activity': datetime.now()
+        }
+        
+        print(f"Admin用户 {username} 从IP {client_ip} 登录成功")
+        
+        return {
+            "success": True,
+            "admin_session_id": admin_session_id,
+            "message": "Admin登录成功",
+            "admin_info": {
+                "username": username,
+                "ip": client_ip,
+                "login_time": datetime.now().isoformat()
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Admin登录失败: {e}")
+        raise HTTPException(status_code=500, detail=f"登录失败: {str(e)}")
+
+@app.post("/admin/logout")
+async def admin_logout(admin_session_id: str = Form(...)):
+    """Admin账号登出"""
+    try:
+        if admin_session_id in admin_sessions:
+            admin_info = admin_sessions[admin_session_id]
+            del admin_sessions[admin_session_id]
+            print(f"Admin用户 {admin_info['username']} 从IP {admin_info['ip']} 登出")
+            
+            return {
+                "success": True,
+                "message": "Admin登出成功"
+            }
+        else:
+            raise HTTPException(status_code=404, detail="Admin会话不存在")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"登出失败: {str(e)}")
+
+@app.get("/admin/check_session")
+async def check_admin_session(admin_session_id: str, request: Request = None):
+    """检查admin会话是否有效"""
+    try:
+        if admin_session_id not in admin_sessions:
+            return {"valid": False, "message": "会话不存在"}
+        
+        admin_info = admin_sessions[admin_session_id]
+        client_ip = get_real_client_ip(request=request)
+        
+        # 验证IP是否匹配（可选，增强安全性）
+        if admin_info['ip'] != client_ip:
+            print(f"Admin会话IP不匹配: 原IP {admin_info['ip']}, 当前IP {client_ip}")
+            # 可以选择是否严格检查IP，这里暂时允许IP变化
+        
+        # 更新最后活动时间
+        admin_sessions[admin_session_id]['last_activity'] = datetime.now()
+        
+        return {
+            "valid": True,
+            "admin_info": {
+                "username": admin_info['username'],
+                "ip": admin_info['ip'],
+                "login_time": admin_info['login_time'].isoformat(),
+                "last_activity": admin_info['last_activity'].isoformat()
+            }
+        }
+        
+    except Exception as e:
+        print(f"检查admin会话失败: {e}")
+        return {"valid": False, "message": "检查会话失败"}
+
 if __name__ == "__main__":
     uvicorn.run(
         "main:app", 
