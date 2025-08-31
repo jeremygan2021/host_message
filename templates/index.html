@@ -4684,7 +4684,7 @@
                                     <button class="rename-btn" onclick="showRenameFolderDialog('${file.name}', '${currentFolder}')">
                                         <i class="fas fa-edit"></i> 重命名
                                     </button>
-                                    ${currentUserInfo.isAdmin ? `<button class="delete-btn" onclick="deleteFolder('${file.path}')">
+                                    ${(currentUserInfo.isAdmin || currentUserInfo.adminSessionId) ? `<button class="delete-btn" onclick="deleteFolder('${file.path}')">
                                         <i class="fas fa-trash"></i> 删除
                                     </button>` : ''}
                                 </div>
@@ -4732,7 +4732,7 @@
                                     <button class="move-btn" onclick="showMoveFileDialog('${file.name}', '${currentFolder}')">
                                         <i class="fas fa-cut"></i> 移动
                                     </button>
-                                    ${currentUserInfo.isAdmin ? `<button class="delete-btn" onclick="deleteFile('${file.path}')">
+                                    ${(currentUserInfo.isAdmin || currentUserInfo.adminSessionId) ? `<button class="delete-btn" onclick="deleteFile('${file.path}')">
                                         <i class="fas fa-trash"></i> 删除
                                     </button>` : ''}
                                 </div>
@@ -4974,8 +4974,8 @@
 
         // 删除文件夹
         async function deleteFolder(folderPath) {
-            // 检查管理员权限
-            if (!currentUserInfo.isAdmin) {
+            // 检查管理员权限 - 支持通过IP或登录获得的管理员权限
+            if (!currentUserInfo.isAdmin && !currentUserInfo.adminSessionId) {
                 showToast('权限不足，只有管理员才能删除文件夹');
                 return;
             }
@@ -4985,8 +4985,15 @@
             }
             
             try {
+                const headers = {};
+                // 如果有admin session，添加到请求头
+                if (currentUserInfo.adminSessionId) {
+                    headers['Authorization'] = `AdminSession ${currentUserInfo.adminSessionId}`;
+                }
+                
                 const response = await fetch(`/folders/${folderPath}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: headers
                 });
                 
                 if (response.status === 403) {
@@ -5108,8 +5115,8 @@
 
         // 添加删除文件的函数
         async function deleteFile(filename) {
-            // 检查管理员权限
-            if (!currentUserInfo.isAdmin) {
+            // 检查管理员权限 - 支持通过IP或登录获得的管理员权限
+            if (!currentUserInfo.isAdmin && !currentUserInfo.adminSessionId) {
                 showToast('权限不足，只有管理员才能删除文件');
                 return;
             }
@@ -5119,8 +5126,15 @@
             }
             
             try {
+                const headers = {};
+                // 如果有admin session，添加到请求头
+                if (currentUserInfo.adminSessionId) {
+                    headers['Authorization'] = `AdminSession ${currentUserInfo.adminSessionId}`;
+                }
+                
                 const response = await fetch(`/files/${filename}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: headers
                 });
                 
                 if (response.status === 403) {
@@ -5338,7 +5352,9 @@
 
         function closeAdminLogin() {
             const modal = document.getElementById('adminLoginModal');
-            modal.classList.remove('active');
+            if (modal) {
+                modal.classList.remove('active');
+            }
         }
 
         async function submitAdminLogin(event) {
@@ -5378,6 +5394,9 @@
                     
                     // 更新用户界面
                     updateUserInfoDisplay();
+                    
+                    // 重新加载文件列表以显示删除按钮
+                    loadFiles();
                     
                     // 1秒后关闭弹窗
                     setTimeout(() => {
@@ -5423,6 +5442,9 @@
                 currentUserInfo.adminSessionId = null;
                 localStorage.removeItem('adminSessionId');
                 updateUserInfoDisplay();
+                
+                // 重新加载文件列表以隐藏删除按钮
+                loadFiles();
             }
         }
 

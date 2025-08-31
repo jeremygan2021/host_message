@@ -1008,12 +1008,27 @@ async def move_file(
         raise HTTPException(status_code=500, detail=f"移动文件失败: {str(e)}")
 
 @app.delete("/folders/{folder_path:path}")
-async def delete_folder(folder_path: str, request: Request = None):
+async def delete_folder(folder_path: str, request: Request = None, admin_session_id: str = None):
     """删除文件夹（包括其中的所有文件和子文件夹）- 仅管理员可操作"""
     try:
-        # 验证管理员权限
+        # 验证管理员权限 - 支持IP验证或admin session验证
         client_ip = get_real_client_ip(request=request)
-        if client_ip != admin_ip:
+        is_admin_by_ip = (client_ip == admin_ip)
+        
+        # 检查admin session
+        is_admin_by_session = False
+        if admin_session_id and admin_session_id in admin_sessions:
+            is_admin_by_session = True
+        
+        # 如果不是通过IP验证的管理员，尝试从请求头获取admin session
+        if not is_admin_by_ip and not is_admin_by_session:
+            auth_header = request.headers.get('Authorization')
+            if auth_header and auth_header.startswith('AdminSession '):
+                session_id = auth_header.replace('AdminSession ', '')
+                if session_id in admin_sessions:
+                    is_admin_by_session = True
+        
+        if not is_admin_by_ip and not is_admin_by_session:
             raise HTTPException(status_code=403, detail="权限不足，只有管理员才能删除文件夹")
         
         full_path = os.path.join(UPLOAD_DIR, folder_path)
@@ -1320,12 +1335,27 @@ async def download_file(file_path: str):
         raise HTTPException(status_code=500, detail=f"下载失败: {str(e)}")
 
 @app.delete("/files/{file_path:path}")
-async def delete_file(file_path: str, request: Request = None):
+async def delete_file(file_path: str, request: Request = None, admin_session_id: str = None):
     """删除文件，支持文件夹路径 - 仅管理员可操作"""
     try:
-        # 验证管理员权限
+        # 验证管理员权限 - 支持IP验证或admin session验证
         client_ip = get_real_client_ip(request=request)
-        if client_ip != admin_ip:
+        is_admin_by_ip = (client_ip == admin_ip)
+        
+        # 检查admin session
+        is_admin_by_session = False
+        if admin_session_id and admin_session_id in admin_sessions:
+            is_admin_by_session = True
+        
+        # 如果不是通过IP验证的管理员，尝试从请求头获取admin session
+        if not is_admin_by_ip and not is_admin_by_session:
+            auth_header = request.headers.get('Authorization')
+            if auth_header and auth_header.startswith('AdminSession '):
+                session_id = auth_header.replace('AdminSession ', '')
+                if session_id in admin_sessions:
+                    is_admin_by_session = True
+        
+        if not is_admin_by_ip and not is_admin_by_session:
             raise HTTPException(status_code=403, detail="权限不足，只有管理员才能删除文件")
         
         full_file_path = os.path.join(UPLOAD_DIR, file_path)
