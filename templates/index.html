@@ -3032,6 +3032,7 @@
                     <a href="/"><i class="fas fa-home"></i> 首页</a>
                     <a href="/chat"><i class="fas fa-comments"></i> 聊天室</a>
                     <!-- //// / -->
+                    <a href="#" onclick="showInternalAssets()"><i class="fas fa-network-wired"></i> 内网资产</a>
                     <a href="http://6.6.6.86:3321" target="_blank"><i class="fas fa-code-branch"></i> gitea代码仓库</a>
                 </div>
             </div>
@@ -5569,6 +5570,498 @@
             }, 2000);
         }
 
+        // 显示内网资产
+        function showInternalAssets() {
+            // 创建模态框
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.id = 'internalAssetsModal';
+            modal.style.display = 'flex';
+            
+            // 创建模态框内容
+            const modalContent = document.createElement('div');
+            modalContent.className = 'modal';
+            modalContent.style.maxWidth = '900px';
+            modalContent.style.width = '90%';
+            
+            // 模态框头部
+            const modalHeader = document.createElement('div');
+            modalHeader.className = 'modal-header';
+            modalHeader.innerHTML = `
+                <h3><i class="fas fa-network-wired"></i> 内网资产</h3>
+                <button class="close-btn" onclick="closeInternalAssetsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // 模态框主体
+            const modalBody = document.createElement('div');
+            modalBody.className = 'modal-body';
+            modalBody.innerHTML = `
+                <div class="internal-assets-container">
+                    <div class="asset-section">
+                        <h4><i class="fas fa-desktop"></i> 香橙派资源</h4>
+                        <div class="asset-list">
+                            <div class="asset-item" data-asset="orange-1panel">
+                                <div class="asset-info">
+                                    <div class="asset-main">
+                                        <div class="asset-icon">
+                                            <i class="fas fa-server"></i>
+                                        </div>
+                                        <div class="asset-details">
+                                            <h5>香橙派1Panel</h5>
+                                            <p>6.6.6.86:3333/jeremypi</p>
+                                        </div>
+                                        <div class="asset-actions">
+                                            <a href="http://6.6.6.86:3333/jeremypi" target="_blank" class="asset-link">
+                                                <i class="fas fa-external-link-alt"></i> 访问
+                                            </a>
+                                            <button class="credential-toggle" id="toggle-orange-1panel" onclick="showCredentials('orange-1panel')">
+                                                <i class="fas fa-eye"></i> 查看账号
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="asset-credentials" id="credentials-orange-1panel" style="display: none;">
+                                                <div class="credential-item">
+                                                    <span class="credential-label">账号:</span>
+                                                    <span class="credential-value">jeremypi</span>
+                                                    <button class="copy-btn" onclick="copyToClipboard('jeremypi', 'orange-pi-1panel')">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="credential-item">
+                                                    <span class="credential-label">密码:</span>
+                                                    <span class="credential-value">123tangledup-ai</span>
+                                                    <button class="copy-btn" onclick="copyToClipboard('123tangledup-ai', 'orange-pi-1panel')">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                </div>
+                            </div>
+                            <div class="asset-item" data-asset="orange-vscode">
+                                <div class="asset-info">
+                                    <div class="asset-main">
+                                        <div class="asset-icon">
+                                            <i class="fas fa-code"></i>
+                                        </div>
+                                        <div class="asset-details">
+                                            <h5>香橙派VScode</h5>
+                                            <p>6.6.6.86:8088</p>
+                                        </div>
+                                        <div class="asset-actions">
+                                            <a href="http://6.6.6.86:8088" target="_blank" class="asset-link">
+                                                <i class="fas fa-external-link-alt"></i> 访问
+                                            </a>
+                                            <button class="credential-toggle" id="toggle-orange-vscode" onclick="showCredentials('orange-vscode')">
+                                                <i class="fas fa-eye"></i> 查看密码
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="asset-credentials" id="credentials-orange-vscode" style="display: none;">
+                                        <div class="credential-item">
+                                            <span class="credential-label">密码:</span>
+                                            <span class="credential-value">jeremypi</span>
+                                            <button class="copy-btn" onclick="copyToClipboard('jeremypi', 'orange-pi-vscode')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="asset-section">
+                        <h4><i class="fas fa-laptop"></i> 台式机资源</h4>
+                        <div class="asset-list">
+                            <div class="asset-item" data-asset="desktop-1panel">
+                                <div class="asset-info">
+                                    <div class="asset-main">
+                                        <div class="asset-icon">
+                                            <i class="fas fa-server"></i>
+                                        </div>
+                                        <div class="asset-details">
+                                            <h5>台式机ubuntu1Panel</h5>
+                                            <p>6.6.6.44:3333/quant_speed</p>
+                                        </div>
+                                        <div class="asset-actions">
+                                            <a href="http://6.6.6.44:3333/quant_speed" target="_blank" class="asset-link">
+                                                <i class="fas fa-external-link-alt"></i> 访问
+                                            </a>
+                                            <button class="credential-toggle" id="toggle-desktop-1panel" onclick="showCredentials('desktop-1panel')">
+                                                <i class="fas fa-eye"></i> 查看账号
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="asset-credentials" id="credentials-desktop-1panel" style="display: none;">
+                                        <div class="credential-item">
+                                            <span class="credential-label">账号:</span>
+                                            <span class="credential-value">quant_speed</span>
+                                            <button class="copy-btn" onclick="copyToClipboard('quant_speed', 'desktop-1panel')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                        <div class="credential-item">
+                                            <span class="credential-label">密码:</span>
+                                            <span class="credential-value">123quant_speed</span>
+                                            <button class="copy-btn" onclick="copyToClipboard('123quant_speed', 'desktop-1panel')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="asset-item" data-asset="desktop-vscode">
+                                <div class="asset-info">
+                                    <div class="asset-main">
+                                        <div class="asset-icon">
+                                            <i class="fas fa-code"></i>
+                                        </div>
+                                        <div class="asset-details">
+                                            <h5>台式机VScode</h5>
+                                            <p>6.6.6.44:8088</p>
+                                        </div>
+                                        <div class="asset-actions">
+                                            <a href="http://6.6.6.44:8088" target="_blank" class="asset-link">
+                                                <i class="fas fa-external-link-alt"></i> 访问
+                                            </a>
+                                            <button class="credential-toggle" id="toggle-desktop-vscode" onclick="showCredentials('desktop-vscode')">
+                                                <i class="fas fa-eye"></i> 查看密码
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="asset-credentials" id="credentials-desktop-vscode" style="display: none;">
+                                        <div class="credential-item">
+                                            <span class="credential-label">密码:</span>
+                                            <span class="credential-value">quant-speed</span>
+                                            <button class="copy-btn" onclick="copyToClipboard('quant-speed', 'desktop-vscode')">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 添加样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .internal-assets-container {
+                    max-height: 70vh;
+                    overflow-y: auto;
+                }
+                
+                .asset-section {
+                    margin-bottom: 25px;
+                }
+                
+                .asset-section h4 {
+                    margin-bottom: 15px;
+                    color: var(--primary-color);
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-size: 18px;
+                }
+                
+                .asset-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                }
+                
+                .asset-item {
+                    background: rgba(74, 144, 226, 0.05);
+                    border: 1px solid rgba(74, 144, 226, 0.1);
+                    border-radius: 12px;
+                    overflow: hidden;
+                    transition: all 0.3s ease;
+                }
+                
+                .asset-item:hover {
+                    background: rgba(74, 144, 226, 0.1);
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(74, 144, 226, 0.15);
+                }
+                
+                .asset-info {
+                    padding: 0;
+                }
+                
+                .asset-main {
+                    display: flex;
+                    align-items: center;
+                    padding: 20px;
+                    gap: 15px;
+                }
+                
+                .asset-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 50px;
+                    height: 50px;
+                    background: rgba(74, 144, 226, 0.1);
+                    border-radius: 10px;
+                    flex-shrink: 0;
+                }
+                
+                .asset-icon i {
+                    font-size: 24px;
+                    color: var(--primary-color);
+                }
+                
+                .asset-details {
+                    flex: 1;
+                }
+                
+                .asset-details h5 {
+                    margin: 0 0 5px 0;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: var(--text-color);
+                }
+                
+                .asset-details p {
+                    margin: 0;
+                    font-size: 14px;
+                    color: #666;
+                    word-break: break-all;
+                }
+                
+                .asset-actions {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                }
+                
+                .asset-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 8px 15px;
+                    background: var(--primary-color);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    transition: all 0.3s ease;
+                }
+                
+                .asset-link:hover {
+                    background: var(--secondary-color);
+                }
+                
+                .credential-toggle {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 8px 15px;
+                    background: #f0f0f0;
+                    color: var(--text-color);
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                
+                .credential-toggle:hover {
+                    background: #e0e0e0;
+                }
+                
+                .asset-credentials {
+                    background: rgba(255, 255, 255, 0.7);
+                    border-top: 1px solid rgba(74, 144, 226, 0.1);
+                    padding: 15px 20px;
+                    animation: slideDown 0.3s ease-in-out;
+                }
+                
+                .credential-item {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 10px;
+                    gap: 10px;
+                }
+                
+                .credential-item:last-child {
+                    margin-bottom: 0;
+                }
+                
+                .credential-label {
+                    font-weight: 600;
+                    min-width: 50px;
+                    color: var(--primary-color);
+                }
+                
+                .credential-value {
+                    flex: 1;
+                    background: rgba(255, 255, 255, 0.8);
+                    padding: 6px 12px;
+                    border-radius: 6px;
+                    font-family: monospace;
+                    font-size: 14px;
+                    word-break: break-all;
+                }
+                
+                .copy-btn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 32px;
+                    height: 32px;
+                    background: var(--primary-color);
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                
+                .copy-btn:hover {
+                    background: var(--secondary-color);
+                }
+                
+                .toast-notification {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: rgba(0, 0, 0, 0.8);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 6px;
+                    transform: translateY(100px);
+                    opacity: 0;
+                    transition: all 0.3s ease;
+                    z-index: 10000;
+                }
+                
+                .toast-notification.show {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+                
+                @keyframes slideDown {
+                    from { 
+                        opacity: 0; 
+                        max-height: 0; 
+                    }
+                    to { 
+                        opacity: 1; 
+                        max-height: 200px; 
+                    }
+                }
+            `;
+            
+            // 组装模态框
+            modalContent.appendChild(modalHeader);
+            modalContent.appendChild(modalBody);
+            modal.appendChild(modalContent);
+            document.head.appendChild(style);
+            document.body.appendChild(modal);
+            
+            // 点击模态框外部关闭
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeInternalAssetsModal();
+                }
+            });
+        }
+
+        // 关闭内网资产模态框
+        function closeInternalAssetsModal() {
+            const modal = document.getElementById('internalAssetsModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // 显示账号密码信息
+        function showCredentials(assetId) {
+            const credentialsSection = document.getElementById(`credentials-${assetId}`);
+            const toggleBtn = document.getElementById(`toggle-${assetId}`);
+            
+            if (!credentialsSection || !toggleBtn) {
+                console.error('找不到元素:', `credentials-${assetId}`, `toggle-${assetId}`);
+                return;
+            }
+            
+            if (credentialsSection.style.display === 'none' || !credentialsSection.style.display) {
+                // 显示账号密码
+                credentialsSection.style.display = 'block';
+                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> 隐藏账号';
+            } else {
+                // 隐藏账号密码
+                credentialsSection.style.display = 'none';
+                toggleBtn.innerHTML = '<i class="fas fa-eye"></i> 查看账号';
+            }
+        }
+
+        // 复制到剪贴板
+        function copyToClipboard(text, assetId = null) {
+            // 如果指定了assetId，则复制对应的账号密码
+            if (assetId) {
+                let credentials = '';
+                
+                switch(assetId) {
+                    case 'orange-pi-1panel':
+                        credentials = '账号: jeremypi\n密码: 123tangledup-ai';
+                        break;
+                    case 'orange-pi-vscode':
+                        credentials = '密码: jeremypi';
+                        break;
+                    case 'desktop-1panel':
+                        credentials = '账号: quant_speed\n密码: 123quant_speed';
+                        break;
+                    case 'desktop-vscode':
+                        credentials = '密码: quant-speed';
+                        break;
+                }
+                
+                text = credentials;
+            }
+            
+            // 创建临时文本区域
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = text;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast('账号密码已复制到剪贴板');
+            } catch (err) {
+                showToast('复制失败，请手动复制');
+            }
+            
+            // 移除临时文本区域
+            document.body.removeChild(tempTextArea);
+        }
+
+        // 显示提示信息
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // 显示提示
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // 3秒后隐藏
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
         // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 恢复快速上传设置
@@ -5662,6 +6155,7 @@
                     hideRenameFileDialog();
                     hideRenameFolderDialog();
                     hideBatchRenameDialog();
+                    closeInternalAssetsModal();
                 }
                 
                 // Enter 在各种对话框中执行相应操作
@@ -5738,4 +6232,4 @@
         </div>
     </div>
 </body>
-</html> 
+</html>
